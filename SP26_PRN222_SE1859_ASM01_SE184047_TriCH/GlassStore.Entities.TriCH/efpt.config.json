@@ -1,0 +1,117 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "PRN222_EYEWEARSHOPContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "IrregularWords": null,
+   "MinimumProductVersion": "2.6.1301",
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PluralRules": null,
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "GlassStore.Entities.TriCH",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "SingularRules": null,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[AfterSalesTaiND]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CategoryTriCH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CustomerSupportQuiTH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[LensServicePhuHN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrderItemNamtmh]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrderNamtmh]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrderReviewQuiTH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PrescriptionPhuHN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductColorTriCH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductImageTriCH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductionSonKN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductReviewMiLTT]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ProductTriCH]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RefundTaiND]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ReviewImageMiLTT]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ShipmentSonKN]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserAccount]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDatabaseNamesForRoutines": true,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseInternalAccessModifiersForSprocsAndFunctions": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false,
+   "UseT4Split": false
+}

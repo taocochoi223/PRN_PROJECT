@@ -1,0 +1,115 @@
+﻿@using GlassStore.Entities.TriCH.Models
+@model IEnumerable<ProductTriCh>
+
+@{
+    ViewData["Title"] = ViewData["PageTitle"] ?? "Sản phẩm";
+    var categories = ViewData["Categories"] as List<CategoryTriCh>;
+    var currentCatId = ViewData["CurrentCategoryId"] as int? ?? 0;
+}
+
+<div class="container my-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3 mb-4">
+            <div class="card mb-3">
+                <div class="card-header bg-white fw-bold">Tìm kiếm</div>
+                <div class="card-body">
+                    <form asp-controller="ProductTriCH" asp-action="Index" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" value="@ViewData["CurrentFilter"]" placeholder="Tìm sản phẩm...">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header bg-white fw-bold">Danh mục</div>
+                <div class="list-group list-group-flush">
+                    <a href="@Url.Action("Index", "ProductTriCH")" class="list-group-item list-group-item-action @(currentCatId == 0 ? "active" : "")">
+                        All
+                    </a>
+                    @if (categories != null)
+                    {
+                        foreach (var cat in categories)
+                        {
+                            <a href="@Url.Action("ProductsByCategory", "ProductTriCH", new { categoryId = cat.CategoryTriChid })"
+                               class="list-group-item list-group-item-action @(currentCatId == cat.CategoryTriChid ? "active" : "")">
+                                @cat.CategoryName
+                            </a>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Simple Banner -->
+            <div class="card bg-light border-0">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-primary">Khuyến Mãi</h5>
+                    <p class="card-text small">Giảm giá 20% cho đơn hàng đầu tiên!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Product Area -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h4 mb-0">@ViewData["PageTitle"]</h2>
+                <div class="text-muted small">Hiển thị @Model.Count() sản phẩm</div>
+            </div>
+
+            @if (Model.Any())
+            {
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    @foreach (var item in Model)
+                    {
+                        var primaryImage = item.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
+                                        ?? item.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
+                                        ?? "https://via.placeholder.com/300x300?text=No+Image";
+
+                        <div class="col">
+                            <div class="card h-100 shadow-sm">
+                                <img src="@primaryImage" class="card-img-top p-3" alt="@item.ProductName" style="height: 200px; object-fit: contain;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title h6">
+                                        <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="text-decoration-none text-dark">
+                                            @item.ProductName
+                                        </a>
+                                    </h5>
+                                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                                         <span class="fw-bold text-primary">@item.Price.ToString("N0") đ</span>
+                                         <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-primary">Chi tiết</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center" role="alert">
+                    Không tìm thấy sản phẩm nào. <a href="@Url.Action("Index")" class="alert-link">Xóa bộ lọc</a>
+                </div>
+            }
+
+            <!-- Pagination (Static for now as mostly requested) -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled"><a class="page-link" href="#">Trước</a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Sau</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

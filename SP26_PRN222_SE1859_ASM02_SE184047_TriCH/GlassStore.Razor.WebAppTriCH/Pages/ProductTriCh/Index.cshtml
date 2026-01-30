@@ -1,0 +1,108 @@
+﻿@page
+@model GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Sku)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].FrameType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Material)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Dimensions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].StockQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].UpdatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductTriCh[0].CategoryTriCh)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ProductTriCh) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sku)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FrameType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Material)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dimensions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryTriCh.CategoryName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ProductTriChid">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ProductTriChid">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ProductTriChid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

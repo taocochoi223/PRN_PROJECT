@@ -1,0 +1,95 @@
+﻿@page
+@model GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ProductTriCh</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductTriCh.ProductTriChid" />
+            <div class="form-group">
+                <label asp-for="ProductTriCh.ProductName" class="control-label"></label>
+                <input asp-for="ProductTriCh.ProductName" class="form-control" />
+                <span asp-validation-for="ProductTriCh.ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Sku" class="control-label"></label>
+                <input asp-for="ProductTriCh.Sku" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Sku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.CategoryTriChid" class="control-label"></label>
+                <select asp-for="ProductTriCh.CategoryTriChid" class="form-control" asp-items="ViewBag.CategoryTriChid" ></select>
+                <span asp-validation-for="ProductTriCh.CategoryTriChid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Brand" class="control-label"></label>
+                <input asp-for="ProductTriCh.Brand" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Price" class="control-label"></label>
+                <input asp-for="ProductTriCh.Price" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Description" class="control-label"></label>
+                <input asp-for="ProductTriCh.Description" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.FrameType" class="control-label"></label>
+                <input asp-for="ProductTriCh.FrameType" class="form-control" />
+                <span asp-validation-for="ProductTriCh.FrameType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Material" class="control-label"></label>
+                <input asp-for="ProductTriCh.Material" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Material" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Dimensions" class="control-label"></label>
+                <input asp-for="ProductTriCh.Dimensions" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Dimensions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.StockQuantity" class="control-label"></label>
+                <input asp-for="ProductTriCh.StockQuantity" class="form-control" />
+                <span asp-validation-for="ProductTriCh.StockQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.Status" class="control-label"></label>
+                <input asp-for="ProductTriCh.Status" class="form-control" />
+                <span asp-validation-for="ProductTriCh.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.CreatedAt" class="control-label"></label>
+                <input asp-for="ProductTriCh.CreatedAt" class="form-control" />
+                <span asp-validation-for="ProductTriCh.CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductTriCh.UpdatedAt" class="control-label"></label>
+                <input asp-for="ProductTriCh.UpdatedAt" class="form-control" />
+                <span asp-validation-for="ProductTriCh.UpdatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

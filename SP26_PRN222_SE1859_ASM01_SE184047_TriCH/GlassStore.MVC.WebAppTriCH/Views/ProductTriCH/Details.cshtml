@@ -1,0 +1,156 @@
+﻿@model GlassStore.Entities.TriCH.Models.ProductTriCh
+
+@{
+    ViewData["Title"] = Model.ProductName;
+    var primaryImg = Model.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
+                     ?? Model.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
+                     ?? "https://via.placeholder.com/500x500?text=No+Image";
+}
+
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5">
+        <!-- Product Images -->
+        <div class="col-md-6">
+             <div class="card border-0 mb-3">
+                 <img id="mainImage" src="@primaryImg" class="img-fluid rounded" alt="@Model.ProductName" style="max-height: 500px; object-fit: contain;">
+             </div>
+             
+             @if (Model.ProductImageTriChes != null && Model.ProductImageTriChes.Count > 1)
+             {
+                 <div class="d-flex gap-2 ms-1 overflow-auto">
+                     @foreach (var img in Model.ProductImageTriChes)
+                     {
+                         <img src="@img.ImageUrl" 
+                              class="img-thumbnail" 
+                              style="width: 80px; height: 80px; cursor: pointer; object-fit: cover;" 
+                              onclick="changeImage(this.src)"
+                              alt="Thumbnail">
+                     }
+                 </div>
+             }
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <h6 class="text-primary fw-bold text-uppercase">@Model.CategoryTriCh?.CategoryName</h6>
+            <h1 class="display-5 fw-bold mb-3">@Model.ProductName</h1>
+            
+            <div class="mb-3">
+                <h2 class="text-danger fw-bold d-inline-block me-3">@Model.Price.ToString("N0") đ</h2>
+                @if (Model.StockQuantity > 0)
+                {
+                    <span class="badge bg-success">Còn hàng</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Hết hàng</span>
+                }
+            </div>
+
+            <p class="lead text-muted">@Model.Description</p>
+
+            <hr class="my-4">
+
+            <!-- Specs -->
+             <div class="mb-4">
+                 <h5 class="fw-bold">Thông số kỹ thuật</h5>
+                 <dl class="row">
+                     <dt class="col-sm-3 text-muted">Thương hiệu</dt>
+                     <dd class="col-sm-9">@Model.Brand</dd>
+
+                     <dt class="col-sm-3 text-muted">Chất liệu</dt>
+                     <dd class="col-sm-9">@Model.Material</dd>
+
+                     <dt class="col-sm-3 text-muted">Loại gọng</dt>
+                     <dd class="col-sm-9">@Model.FrameType</dd>
+                     
+                     <dt class="col-sm-3 text-muted">Kích thước</dt>
+                     <dd class="col-sm-9">@Model.Dimensions</dd>
+                 </dl>
+             </div>
+
+             <!-- Purchase Form -->
+             <form>
+                  @if (Model.ProductColorTriChes != null && Model.ProductColorTriChes.Any())
+                  {
+                      <div class="mb-3">
+                          <label class="form-label fw-bold">Màu sắc:</label>
+                          <div class="d-flex gap-2">
+                               @foreach (var color in Model.ProductColorTriChes)
+                               {
+                                   <div class="form-check">
+                                       <input class="form-check-input" type="radio" name="colorOption" id="color_@color.ColorTriChid" value="@color.ColorTriChid" 
+                                              @(Model.ProductColorTriChes.First() == color ? "checked" : "")>
+                                       <label class="form-check-label" for="color_@color.ColorTriChid">
+                                           @color.ColorName
+                                       </label>
+                                   </div>
+                               }
+                          </div>
+                      </div>
+                  }
+
+                  <div class="d-flex gap-3 align-items-center mb-4">
+                      <div class="input-group" style="width: 140px;">
+                          <button class="btn btn-outline-secondary" type="button" onclick="decrement()">-</button>
+                          <input type="text" class="form-control text-center" id="quantityInput" value="1" readonly>
+                          <button class="btn btn-outline-secondary" type="button" onclick="increment()">+</button>
+                      </div>
+                      <button type="button" class="btn btn-primary btn-lg flex-grow-1"><i class="bi bi-cart-plus me-2"></i>Thêm vào giỏ</button>
+                      <button type="button" class="btn btn-outline-danger btn-lg"><i class="bi bi-heart"></i></button>
+                  </div>
+             </form>
+             
+             <!-- Policy -->
+             <div class="row g-3 text-center border-top pt-3">
+                 <div class="col-4">
+                     <div class="p-2">
+                         <i class="bi bi-truck fs-4 text-primary"></i>
+                         <p class="small mb-0">Freeship</p>
+                     </div>
+                 </div>
+                 <div class="col-4">
+                     <div class="p-2 border-start border-end">
+                         <i class="bi bi-shield-check fs-4 text-primary"></i>
+                         <p class="small mb-0">Bảo hành 12T</p>
+                     </div>
+                 </div>
+                 <div class="col-4">
+                     <div class="p-2">
+                         <i class="bi bi-arrow-repeat fs-4 text-primary"></i>
+                         <p class="small mb-0">Đổi trả 30 ngày</p>
+                     </div>
+                 </div>
+             </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeImage(src) {
+        document.getElementById('mainImage').src = src;
+    }
+
+    function increment() {
+        var input = document.getElementById('quantityInput');
+        var val = parseInt(input.value) || 0;
+        input.value = val + 1;
+    }
+
+    function decrement() {
+        var input = document.getElementById('quantityInput');
+        var val = parseInt(input.value) || 0;
+        if (val > 1) {
+            input.value = val - 1;
+        }
+    }
+</script>

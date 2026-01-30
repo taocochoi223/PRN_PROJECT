@@ -1,0 +1,92 @@
+﻿@model List<GlassStore.Entities.TriCH.Models.CategoryTriCh>
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold">GlassStore TriCH</h1>
+            <p class="lead text-muted">Chào mừng đến với cửa hàng kính mắt chính hãng. Chúng tôi cung cấp các sản phẩm chất lượng cao với giá cả hợp lý.</p>
+            <div class="d-flex gap-2">
+                <a asp-controller="ProductTriCH" asp-action="Index" class="btn btn-primary btn-lg">Xem Sản Phẩm</a>
+                <a href="#categories" class="btn btn-outline-secondary btn-lg">Danh Mục</a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+             <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Glasses" class="img-fluid rounded shadow-sm mt-4 mt-lg-0">
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row g-4 text-center mt-4">
+        <div class="col-md-3">
+            <div class="p-3 border rounded bg-light h-100">
+                <i class="bi bi-truck fs-1 text-primary mb-3"></i>
+                <h5>Giao Hàng Nhanh</h5>
+                <p class="small text-muted mb-0">Vận chuyển toàn quốc</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border rounded bg-light h-100">
+                <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                <h5>Chính Hãng</h5>
+                <p class="small text-muted mb-0">Cam kết 100%</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="p-3 border rounded bg-light h-100">
+                <i class="bi bi-arrow-repeat fs-1 text-primary mb-3"></i>
+                <h5>Đổi Trả</h5>
+                <p class="small text-muted mb-0">Trong vòng 30 ngày</p>
+            </div>
+        </div>
+         <div class="col-md-3">
+            <div class="p-3 border rounded bg-light h-100">
+                <i class="bi bi-headset fs-1 text-primary mb-3"></i>
+                <h5>Hỗ Trợ 24/7</h5>
+                <p class="small text-muted mb-0">Tư vấn nhiệt tình</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Section -->
+    <div id="categories" class="mt-5 pt-4">
+        <h2 class="text-center mb-4">Danh Mục Sản Phẩm</h2>
+        
+        <div class="row g-4">
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var category in Model)
+                {
+                     var imageUrl = "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80";
+                     if (category.CategoryName.Contains("Gọng", StringComparison.OrdinalIgnoreCase))
+                     {
+                         imageUrl = "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80";
+                     }
+                      else if (category.CategoryName.Contains("Phụ kiện", StringComparison.OrdinalIgnoreCase))
+                    {
+                        imageUrl = "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80";
+                    }
+
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-0">
+                             <img src="@imageUrl" class="card-img-top" alt="@category.CategoryName" style="height: 200px; object-fit: cover;">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@category.CategoryName</h5>
+                                <a href="@Url.Action("Index", "ProductTriCH", new { categoryId = category.CategoryTriChid })" class="btn btn-outline-primary btn-sm mt-2">Xem Ngay</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <p class="text-muted">Chưa có danh mục nào.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

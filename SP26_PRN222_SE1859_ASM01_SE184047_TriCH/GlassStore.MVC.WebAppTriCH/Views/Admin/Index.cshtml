@@ -1,0 +1,89 @@
+﻿@model IEnumerable<GlassStore.Entities.TriCH.Models.ProductTriCh>
+
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Quản lý Sản phẩm</h1>
+        <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-lg"></i> Thêm mới</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá</th>
+                            <th>Kho</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model) {
+                             var primaryImage = item.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
+                                        ?? item.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
+                                        ?? "https://via.placeholder.com/50x50?text=No+Img";
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <img src="@primaryImage" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                        <div>
+                                            <div class="fw-bold">@item.ProductName</div>
+                                            <small class="text-muted">ID: @item.ProductTriChid</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.CategoryTriCh?.CategoryName</td>
+                                <td>@item.Price.ToString("N0") đ</td>
+                                <td>
+                                    @if(item.StockQuantity > 0)
+                                    {
+                                        <span class="badge bg-success">@item.StockQuantity</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Hết hàng</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a asp-action="Edit" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.ProductTriChid">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+
+                                    <!-- Delete Modal -->
+                                    <div class="modal fade" id="deleteModal-@item.ProductTriChid" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Xác nhận xóa</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Bạn có chắc muốn xóa sản phẩm <strong>@item.ProductName</strong>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                    <form asp-action="Delete" asp-route-id="@item.ProductTriChid" method="post" class="d-inline">
+                                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

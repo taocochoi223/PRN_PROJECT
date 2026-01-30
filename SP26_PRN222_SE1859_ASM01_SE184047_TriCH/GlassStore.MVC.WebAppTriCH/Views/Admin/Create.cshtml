@@ -1,0 +1,84 @@
+@model GlassStore.Entities.TriCH.Models.ProductTriCh
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Thêm sản phẩm mới</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label asp-for="ProductName" class="form-label">Tên sản phẩm</label>
+                                <input asp-for="ProductName" class="form-control" />
+                                <span asp-validation-for="ProductName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CategoryTriChid" class="form-label">Danh mục</label>
+                                <select asp-for="CategoryTriChid" class ="form-select" asp-items="ViewBag.CategoryTriChid"></select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Price" class="form-label">Giá</label>
+                                <input asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="Description" class="form-label">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="Brand" class="form-label">Thương hiệu</label>
+                                <input asp-for="Brand" class="form-control" />
+                                <span asp-validation-for="Brand" class="text-danger"></span>
+                            </div>
+                             <div class="col-md-4">
+                                <label asp-for="Material" class="form-label">Chất liệu</label>
+                                <input asp-for="Material" class="form-control" />
+                                <span asp-validation-for="Material" class="text-danger"></span>
+                            </div>
+                             <div class="col-md-4">
+                                <label asp-for="FrameType" class="form-label">Loại gọng</label>
+                                <input asp-for="FrameType" class="form-control" />
+                                <span asp-validation-for="FrameType" class="text-danger"></span>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label asp-for="Dimensions" class="form-label">Kích thước</label>
+                                <input asp-for="Dimensions" class="form-control" />
+                                <span asp-validation-for="Dimensions" class="text-danger"></span>
+                            </div>
+
+                             <div class="col-md-6">
+                                <label asp-for="StockQuantity" class="form-label">Số lượng kho</label>
+                                <input asp-for="StockQuantity" class="form-control" />
+                                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-flex justify-content-end gap-2">
+                             <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                            <button type="submit" class="btn btn-success">Tạo mới</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
