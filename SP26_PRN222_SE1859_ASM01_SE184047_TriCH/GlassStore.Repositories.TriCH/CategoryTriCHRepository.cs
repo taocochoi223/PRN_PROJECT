@@ -33,5 +33,12 @@ namespace GlassStore.Repositories.TriCH
                 .ToListAsync();
             return await cate;
         }
+
+        public async Task<CategoryTriCh> GetCategoryByIdAsync(int categoryId)
+        {
+            var category = await _context.CategoryTriChes
+                .FirstOrDefaultAsync(c => c.CategoryTriChid == categoryId);
+            return category!;
+        }
     }
 }

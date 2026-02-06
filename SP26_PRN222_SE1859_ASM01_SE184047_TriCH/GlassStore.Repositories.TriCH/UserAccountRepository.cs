@@ -27,5 +27,6 @@ namespace GlassStore.Repositories.TriCH
                 .FirstOrDefaultAsync(u => u.Email == UserName && u.Password == Password && u.IsActive == true);
             return user;
         }
+
     }
 }

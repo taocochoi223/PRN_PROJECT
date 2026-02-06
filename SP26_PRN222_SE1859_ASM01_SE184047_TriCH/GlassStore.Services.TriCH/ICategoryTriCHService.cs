@@ -6,5 +6,9 @@ namespace GlassStore.Services.TriCH
     {
         Task<List<CategoryTriCh>> GetAllActiveCategoriesAsync();
         Task<List<CategoryTriCh>> GetAllCategoriesAsync();
+        Task<CategoryTriCh?> GetCategoryByIdAsync(int categoryId);
+        Task AddCategoryAsync(CategoryTriCh category);
+        Task DeleteCategoryAsync(int categoryId);
+        Task UpdateCategoryAsync(CategoryTriCh category);
     }
 }
