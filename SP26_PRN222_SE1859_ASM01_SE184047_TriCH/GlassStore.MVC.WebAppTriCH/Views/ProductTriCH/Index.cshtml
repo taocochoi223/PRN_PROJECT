@@ -40,7 +40,7 @@
                     {
                         foreach (var cat in categories)
                         {
-                            <a href="@Url.Action("ProductsByCategory", "ProductTriCH", new { categoryId = cat.CategoryTriChid })"
+                            <a href="@Url.Action("Index", "ProductTriCH", new { categoryId = cat.CategoryTriChid })"
                                class="list-group-item list-group-item-action @(currentCatId == cat.CategoryTriChid ? "active" : "")">
                                 @cat.CategoryName
                             </a>

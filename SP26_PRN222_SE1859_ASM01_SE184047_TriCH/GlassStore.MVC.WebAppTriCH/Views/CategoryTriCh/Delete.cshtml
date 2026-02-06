@@ -1,0 +1,35 @@
+@model GlassStore.Entities.TriCH.Models.CategoryTriCh
+
+@{
+    ViewData["Title"] = "Xóa danh mục";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Xác nhận xóa</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Bạn có chắc muốn xóa danh mục này?</h5>
+                    
+                    <dl class="row">
+                        <dt class = "col-sm-4">Tên danh mục</dt>
+                        <dd class = "col-sm-8">@Model.CategoryName</dd>
+                        
+                        <dt class = "col-sm-4">Slug</dt>
+                        <dd class = "col-sm-8">@Model.Slug</dd>
+                    </dl>
+                    
+                    <form asp-action="Delete" class="text-end">
+                        <input type="hidden" asp-for="CategoryTriChid" />
+                        <a asp-action="Index" class="btn btn-secondary me-2">Hủy</a>
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

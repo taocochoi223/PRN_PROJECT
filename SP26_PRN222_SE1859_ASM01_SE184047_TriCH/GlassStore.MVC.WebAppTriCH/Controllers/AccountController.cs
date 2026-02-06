@@ -79,7 +79,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
                 if (user.RoleId == 1) 
                 {
-                    return RedirectToAction("Index", "ProductAdmin");
+                    return RedirectToAction("Manage", "ProductTriCH");
                 }
                 else
                 {
