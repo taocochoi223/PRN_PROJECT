@@ -4,9 +4,8 @@ namespace GlassStore.Services.TriCH
 {
     public interface IProductTriCHService
     {
-        Task<List<ProductTriCh>> GetAllProductAsync();
+        Task<List<ProductTriCh>> GetAllProductAsync(string? search = null);
         Task<ProductTriCh?> GetProductByIdAsync(int productId);
-        Task<List<ProductTriCh>> SearchProducts(string search);
         Task<List<ProductTriCh>> GetProductByCategoryIdAsync(int categoryId);
         Task AddProductAsync(ProductTriCh product);
         Task UpdateProductAsync(ProductTriCh product);

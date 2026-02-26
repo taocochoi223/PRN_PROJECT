@@ -17,35 +17,28 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             _service = service;
         }
 
-        // GET: CategoryTriCh/Index
-        // Hiển thị danh sách categories
+        // 1. DANH SÁCH: Hiển thị toàn bộ danh mục
         public async Task<IActionResult> Index()
         {
             var categories = await _service.GetAllCategoriesAsync();
             return View(categories);
         }
 
-        // GET: CategoryTriCh/Details/5
-        // Xem chi tiết
+        // 2. CHI TIẾT: Xem thông tin 1 danh mục
         public async Task<IActionResult> Details(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
+
             return View(category);
         }
 
-        // GET: CategoryTriCh/Create
-        // Trang tạo mới
+        // 3. TẠO MỚI: Mở trang tạo
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: CategoryTriCh/Create
-        // Xử lý tạo mới
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryTriCh category)
@@ -58,28 +51,20 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        // GET: CategoryTriCh/Edit/5
-        // Trang chỉnh sửa
+        // 4. CHỈNH SỬA: Mở trang sửa
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
+
             return View(category);
         }
 
-        // POST: CategoryTriCh/Edit/5
-        // Xử lý chỉnh sửa
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryTriCh category)
         {
-            if (id != category.CategoryTriChid)
-            {
-                return NotFound();
-            }
+            if (id != category.CategoryTriChid) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -89,20 +74,15 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        // GET: CategoryTriCh/Delete/5
-        // Trang xác nhận xóa
+        // 5. XÓA: Xác nhận và thực hiện xóa
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
+
             return View(category);
         }
 
-        // POST: CategoryTriCh/Delete/5
-        // Xử lý xóa
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

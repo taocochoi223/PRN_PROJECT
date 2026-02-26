@@ -18,28 +18,7 @@ namespace GlassStore.Repositories.TriCH
             _context = context;
         }
 
-        public async Task<List<ProductTriCh>> GetAllProductAsync()
-        {
-            var products = _context.ProductTriChes
-                .Include(p => p.CategoryTriCh)
-                .Include(p => p.ProductImageTriChes)
-                .Where(p => p.Status == 1)
-                .OrderByDescending(p => p.CreatedAt)
-                .ToListAsync();
-            return await products;
-        }
-
-        public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
-        {
-            var product = _context.ProductTriChes
-                .Include(p => p.CategoryTriCh)
-                .Include(p => p.ProductImageTriChes)
-                .Include(p => p.ProductColorTriChes)
-                .FirstOrDefaultAsync(p => p.ProductTriChid == productId && p.Status == 1);
-            return await product;
-        }
-
-        public async Task<List<ProductTriCh>> SearchProducts (string search)
+        public async Task<List<ProductTriCh>> GetAllProductAsync(string search = null)
         {
             var query = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
@@ -52,8 +31,18 @@ namespace GlassStore.Repositories.TriCH
 
             var products = await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
             return products;
-
         }
+
+        public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
+        {
+            var product = _context.ProductTriChes
+                .Include(p => p.CategoryTriCh)
+                .Include(p => p.ProductImageTriChes)
+                .Include(p => p.ProductColorTriChes)
+                .FirstOrDefaultAsync(p => p.ProductTriChid == productId && p.Status == 1);
+            return await product;
+        }
+
 
         public async Task<List<ProductTriCh>> GetProductByCategoryIdAsync(int categoryId)
         {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -10,11 +10,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; }
-        .sidebar { min-height: 100vh; background: #343a40; color: white; }
-        .sidebar a { color: #ced4da; padding: 10px 20px; display: block; text-decoration: none; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; overflow-x: hidden; }
+        #wrapper { display: flex; width: 100%; transition: all 0.3s ease; }
+        .sidebar { min-height: 100vh; background: #343a40; color: white; transition: all 0.3s ease; width: 250px; }
+        #wrapper.toggled .sidebar { margin-left: -250px; }
+        .sidebar a { color: #ced4da; padding: 12px 20px; display: block; text-decoration: none; transition: 0.2s; }
         .sidebar a:hover, .sidebar a.active { background: #495057; color: white; border-left: 4px solid #0d6efd; }
         .admin-header { background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        #page-content-wrapper { width: 100%; }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -23,7 +26,7 @@
         <!-- Sidebar -->
         <div class="bg-dark border-right sidebar" id="sidebar-wrapper" style="width: 250px;">
             <div class="sidebar-heading text-center py-4 fs-4 fw-bold text-white border-bottom border-secondary">
-                <i class="bi bi-shield-lock-fill me-2"></i>Admin Panel
+                <i class="bi bi-eyeglasses me-1"></i> GlassStore <span class="fs-6 opacity-75">TriCH</span>
             </div>
             <div class="list-group list-group-flush mt-3">
                 <a asp-controller="ProductTriCH" asp-action="Manage" class="list-group-item list-group-item-action bg-dark text-white border-0">
@@ -32,9 +35,7 @@
                 <a asp-controller="CategoryTriCh" asp-action="Index" class="list-group-item list-group-item-action bg-dark text-white border-0">
                     <i class="bi bi-tags me-2"></i> Quản lý Danh mục
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-dark text-white border-0">
-                    <i class="bi bi-people me-2"></i> Quản lý User
-                </a>
+
                  <a asp-controller="Account" asp-action="Logout" class="list-group-item list-group-item-action bg-dark text-white border-0 mt-3 border-top border-secondary pt-3">
                     <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
                 </a>
@@ -52,9 +53,9 @@
                          <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
-                                     <strong>A</strong>
+                                     <strong>@(User.FindFirst("FullName")?.Value?.Substring(0, 1).ToUpper() ?? "A")</strong>
                                 </div>
-                                <span>Quản trị viên</span>
+                                <span>@(User.FindFirst("FullName")?.Value ?? "Quản trị viên")</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="#">Hồ sơ</a>

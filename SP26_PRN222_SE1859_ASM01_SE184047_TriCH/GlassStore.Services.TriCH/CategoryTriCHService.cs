@@ -41,9 +41,9 @@ namespace GlassStore.Services.TriCH
             return await _repo.GetAllCategoriesAsync();
         }
 
-        public Task<CategoryTriCh?> GetCategoryByIdAsync(int categoryId)
+        public async Task<CategoryTriCh?> GetCategoryByIdAsync(int categoryId)
         {
-            throw new NotImplementedException();
+            return await _repo.GetCategoryByIdAsync(categoryId);
         }
 
         public async Task UpdateCategoryAsync(CategoryTriCh category)

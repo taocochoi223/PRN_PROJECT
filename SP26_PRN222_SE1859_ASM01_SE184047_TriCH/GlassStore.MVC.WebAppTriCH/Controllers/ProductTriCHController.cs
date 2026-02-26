@@ -8,7 +8,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 {
     // Controller quản lý ProductTriCh
     // Kết hợp cả chức năng hiển thị (Public) và quản lý (Admin) để đảm bảo "giống tên bảng"
-    [TypeFilter(typeof(Filters.AuthenticationFilter))]
     public class ProductTriCHController : Controller
     {
         private readonly IProductTriCHService _productService;
@@ -27,78 +26,65 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return roleId == "1";
         }
 
-        // --- PUBLIC ACTIONS (Khách hàng xem sản phẩm) ---
-        
-        // Action duy nhất hiển thị danh sách sản phẩm
-        // Hỗ trợ cả tìm kiếm (search) và lọc theo danh mục (categoryId)
+        // 1. TRANG CHỦ: Hiển thị danh sách sản phẩm (Cho khách hàng)
         public async Task<IActionResult> Index(string search, int? categoryId)
         {
-            // 1. Lấy danh sách danh mục để hiển thị bên Sidebar (cột trái)
-            var categories = await _categoryService.GetAllActiveCategoriesAsync();
-            ViewData["Categories"] = categories;
+            // Lấy danh mục cho Sidebar
+            var allCategories = await _categoryService.GetAllActiveCategoriesAsync();
+            ViewData["Categories"] = allCategories;
 
-            // 2. Lấy danh sách sản phẩm
             List<ProductTriCh> products;
 
-            if (categoryId.HasValue)
+            if (categoryId != null)
             {
-                // Nếu có chọn danh mục -> Lấy theo danh mục
+                // Lọc theo danh mục
                 products = await _productService.GetProductByCategoryIdAsync(categoryId.Value);
-                // Tìm tên danh mục để hiển thị tiêu đề
-                var selectedCategory = categories.FirstOrDefault(c => c.CategoryTriChid == categoryId.Value);
-                ViewData["PageTitle"] = selectedCategory?.CategoryName ?? "Sản phẩm";
-                ViewData["CurrentCategoryId"] = categoryId.Value;
-            }
-            else if (!string.IsNullOrEmpty(search))
-            {
-                // Nếu có từ khóa tìm kiếm -> Tìm theo tên
-                products = await _productService.SearchProducts(search);
-                ViewData["PageTitle"] = $"Tìm kiếm: {search}";
-                ViewData["CurrentFilter"] = search;
+                var currentCat = allCategories.FirstOrDefault(c => c.CategoryTriChid == categoryId);
+                ViewData["PageTitle"] = currentCat?.CategoryName;
             }
             else
             {
-                // Mặc định -> Lấy tất cả
-                products = await _productService.GetAllProductAsync();
-                ViewData["PageTitle"] = "Tất cả sản phẩm";
+                // Tìm kiếm hoặc lấy tất cả
+                products = await _productService.GetAllProductAsync(search);
+                ViewData["PageTitle"] = string.IsNullOrEmpty(search) ? "Tất cả sản phẩm" : $"Kết quả tìm kiếm: {search}";
             }
 
-            return View("Index", products);
+            return View(products);
         }
 
+        // 2. CHI TIẾT: Xem thông tin 1 sản phẩm
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View("Details", product);
+            if (product == null) return NotFound();
+
+            return View(product);
         }
 
         // --- ADMIN ACTIONS (Quản lý sản phẩm) ---
         // Truy cập qua /ProductTriCh/Manage
 
+        // --- ADMIN: Quản lý sản phẩm ---
+
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Manage()
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
             var products = await _productService.GetAllProductAsync();
-            
-            // Sử dụng View "Manage" (file Manage.cshtml)
-            return View("Manage", products);
+            return View(products);
         }
 
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Create()
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
-            // Sử dụng Service để lấy danh sách Category thay vì gọi trực tiếp DBContext
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            ViewData["CategoryTriChid"] = new SelectList(categories, "CategoryTriChid", "CategoryName");
+            await LoadCategoriesToViewBag();
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Create(ProductTriCh product)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
@@ -108,56 +94,53 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                 await _productService.AddProductAsync(product);
                 return RedirectToAction(nameof(Manage));
             }
-            
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            ViewData["CategoryTriChid"] = new SelectList(categories, "CategoryTriChid", "CategoryName", product.CategoryTriChid);
+            await LoadCategoriesToViewBag(product.CategoryTriChid);
             return View(product);
         }
 
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Edit(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
 
             var product = await _productService.GetProductByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
             
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            ViewData["CategoryTriChid"] = new SelectList(categories, "CategoryTriChid", "CategoryName", product.CategoryTriChid);
+            await LoadCategoriesToViewBag(product.CategoryTriChid);
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Edit(int id, ProductTriCh product)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
-
-            if (id != product.ProductTriChid)
-            {
-                return NotFound();
-            }
+            if (id != product.ProductTriChid) return NotFound();
 
             if (ModelState.IsValid)
             {
                 await _productService.UpdateProductAsync(product);
                 return RedirectToAction(nameof(Manage));
             }
-            
-            var categories = await _categoryService.GetAllCategoriesAsync();
-            ViewData["CategoryTriChid"] = new SelectList(categories, "CategoryTriChid", "CategoryName", product.CategoryTriChid);
+            await LoadCategoriesToViewBag(product.CategoryTriChid);
             return View(product);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
             await _productService.DeleteProductAsync(id);
             return RedirectToAction(nameof(Manage));
+        }
+
+        private async Task LoadCategoriesToViewBag(int? selectedId = null)
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+            ViewData["CategoryTriChid"] = new SelectList(categories, "CategoryTriChid", "CategoryName", selectedId);
         }
     }
 }

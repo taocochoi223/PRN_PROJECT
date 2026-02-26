@@ -17,19 +17,14 @@ namespace GlassStore.Services.TriCH
             _repo = repo;
         }
 
-        public async Task<List<ProductTriCh>> GetAllProductAsync()
+        public async Task<List<ProductTriCh>> GetAllProductAsync(string? search = null)
         {
-            return await _repo.GetAllProductAsync();
+            return await _repo.GetAllProductAsync(search);
         }
 
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
         {
             return await _repo.GetProductByIdAsync(productId);
-        }
-
-        public async Task<List<ProductTriCh>> SearchProducts( string search)
-        {
-            return await _repo.SearchProducts(search);
         }
 
         public async Task<List<ProductTriCh>> GetProductByCategoryIdAsync(int categoryId)
