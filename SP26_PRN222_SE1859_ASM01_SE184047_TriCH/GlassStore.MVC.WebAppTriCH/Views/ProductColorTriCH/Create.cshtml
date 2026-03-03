@@ -1,0 +1,22 @@
+﻿@model GlassStore.Entities.TriCH.Models.ProductColorTriCh
+
+<h2>Thêm màu mới</h2>
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ProductTriChid" value="@ViewBag.ProductId" />
+
+    <div class="mb-3">
+        <label asp-for="ColorName" class="form-label">Tên màu</label>
+        <input asp-for="ColorName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ColorCode" class="form-label">Mã màu (hex, vd: #FF0000)</label>
+        <input asp-for="ColorCode" class="form-control" type="color" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="StockQuantity" class="form-label">Tồn kho</label>
+        <input asp-for="StockQuantity" class="form-control" type="number" />
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" asp-route-productId="@ViewBag.ProductId" class="btn btn-secondary">Hủy</a>
+</form>

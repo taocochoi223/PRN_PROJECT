@@ -2,12 +2,14 @@ using GlassStore.Repositories.TriCH.DBContext;
 using Microsoft.EntityFrameworkCore;
 using GlassStore.Repositories.TriCH;
 using GlassStore.Services.TriCH;
+using GlassStore.Razor.WebAppTriCH.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 // Register DbContext
 builder.Services.AddDbContext<PRN222_EYEWEARSHOPContext>(options =>
@@ -38,6 +40,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapHub<ProductHub>("/productHub");
 app.MapRazorPages();
 
 app.Run();

@@ -1,0 +1,41 @@
+﻿@model List<GlassStore.Entities.TriCH.Models.ProductColorTriCh>
+
+<h2>Quản lý màu sắc - ProductID: @ViewBag.ProductId</h2>
+<a asp-action="Create" asp-route-productId="@ViewBag.ProductId" class="btn btn-primary">Thêm màu</a>
+<a asp-controller="ProductTriCH" asp-action="Manage" class="btn btn-secondary">Quay lại</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên màu</th>
+            <th>Mã màu</th>
+            <th>Tồn kho</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var color in Model)
+        {
+            <tr>
+                <td>@color.ColorName</td>
+                <td>
+                    <span style="background-color:@color.ColorCode; padding:5px 15px; border-radius:4px;"></span>
+                    @color.ColorCode
+                </td>
+                <td>@color.StockQuantity</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@color.ColorTriChid" class="btn btn-sm btn-warning">Sửa</a>
+                    <form asp-action="Delete" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@color.ColorTriChid" />
+                        <input type="hidden" name="productId" value="@color.ProductTriChid" />
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Xóa màu này?')">
+                            Xóa
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

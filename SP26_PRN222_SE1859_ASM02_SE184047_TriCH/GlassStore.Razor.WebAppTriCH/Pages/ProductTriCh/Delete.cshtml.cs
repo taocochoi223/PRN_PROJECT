@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
+using Microsoft.AspNetCore.SignalR;
+using GlassStore.Razor.WebAppTriCH.Hubs;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class DeleteModel : PageModel
     {
-        private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
+        private readonly PRN222_EYEWEARSHOPContext _context;
+        private readonly IHubContext<ProductHub> _hubContext;
 
-        public DeleteModel(GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext context)
+        public DeleteModel(PRN222_EYEWEARSHOPContext context, IHubContext<ProductHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -55,6 +59,9 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 ProductTriCh = producttrich;
                 _context.ProductTriChes.Remove(ProductTriCh);
                 await _context.SaveChangesAsync();
+
+                // 🔔 Thông báo tới tất cả client đang kết nối về việc xóa sản phẩm
+                await _hubContext.Clients.All.SendAsync("ProductDeleted", id);
             }
 
             return RedirectToPage("./Index");
