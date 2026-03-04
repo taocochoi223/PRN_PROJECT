@@ -15,16 +15,16 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
     public class DeleteModel : PageModel
     {
         private readonly PRN222_EYEWEARSHOPContext _context;
-        private readonly IHubContext<ProductHub> _hubContext;
+        private readonly IHubContext<EyewareHub> _hubContext;
 
-        public DeleteModel(PRN222_EYEWEARSHOPContext context, IHubContext<ProductHub> hubContext)
+        public DeleteModel(PRN222_EYEWEARSHOPContext context, IHubContext<EyewareHub> hubContext)
         {
             _context = context;
             _hubContext = hubContext;
         }
 
         [BindProperty]
-        public ProductTriCh ProductTriCh { get; set; } = default!;
+        public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

@@ -40,7 +40,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapHub<ProductHub>("/productHub");
+app.MapHub<EyewareHub>("/EyewareHub");
 app.MapRazorPages();
 
 app.Run();

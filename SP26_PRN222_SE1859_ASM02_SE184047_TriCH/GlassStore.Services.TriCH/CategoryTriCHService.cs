@@ -21,12 +21,13 @@ namespace GlassStore.Services.TriCH
             await _repo.CreateAsync(category);
         }
 
-        public async Task DeleteCategoryByIdAsync(int categoryId)
+        public async Task DeleteCategoryAsync(int categoryId)
         {
-            var category = await _repo.GetByIdAsync(categoryId);
-            if (category != null)
+            var cate = await _repo.GetCategoryByIdAsync(categoryId);
+            if(cate != null)
             {
-                await _repo.RemoveAsync(category);
+                cate.Status = 0;
+                await _repo.UpdateAsync(cate);
             }
         }
 
@@ -35,10 +36,14 @@ namespace GlassStore.Services.TriCH
             return await _repo.GetAllActiveCategoriesAsync();
         }
 
+        public async Task<List<CategoryTriCh>> GetAllCategoriesAsync()
+        {
+            return await _repo.GetAllCategoriesAsync();
+        }
+
         public async Task<CategoryTriCh?> GetCategoryByIdAsync(int categoryId)
         {
-            var category =  _repo.GetByIdAsync(categoryId);
-            return await category;
+            return await _repo.GetCategoryByIdAsync(categoryId);
         }
 
         public async Task UpdateCategoryAsync(CategoryTriCh category)

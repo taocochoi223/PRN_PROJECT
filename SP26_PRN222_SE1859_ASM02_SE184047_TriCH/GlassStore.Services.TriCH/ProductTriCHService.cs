@@ -17,19 +17,14 @@ namespace GlassStore.Services.TriCH
             _repo = repo;
         }
 
-        public async Task<List<ProductTriCh>> GetAllProductAsync()
+        public async Task<List<ProductTriCh>> GetAllProductAsync(string? search = null)
         {
-            return await _repo.GetAllProductAsync();
+            return await _repo.GetAllProductAsync(search);
         }
 
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
         {
             return await _repo.GetProductByIdAsync(productId);
-        }
-
-        public async Task<List<ProductTriCh>> SearchProducts( string search)
-        {
-            return await _repo.SearchProducts(search);
         }
 
         public async Task<List<ProductTriCh>> GetProductByCategoryIdAsync(int categoryId)
@@ -39,6 +34,8 @@ namespace GlassStore.Services.TriCH
 
         public async Task AddProductAsync(ProductTriCh product)
         {
+            product.Status = 1; 
+            product.CreatedAt = DateTime.Now;
             await _repo.CreateAsync(product);
         }
 
@@ -47,12 +44,13 @@ namespace GlassStore.Services.TriCH
             await _repo.UpdateAsync(product);
         }
 
-        public async Task DeleteProductAsync(int productId)
+        public async Task DeleteProductAsync(int id)
         {
-            var product = await _repo.GetProductByIdAsync(productId);
+            var product = await _repo.GetProductByIdAsync(id);
             if (product != null)
             {
-                await _repo.RemoveAsync(product);
+                product.Status = 0;
+                await _repo.UpdateAsync(product);
             }
         }
     }

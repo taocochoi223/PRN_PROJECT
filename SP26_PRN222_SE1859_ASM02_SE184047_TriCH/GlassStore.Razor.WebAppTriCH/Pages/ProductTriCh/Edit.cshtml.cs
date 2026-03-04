@@ -21,7 +21,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
         }
 
         [BindProperty]
-        public ProductTriCh ProductTriCh { get; set; } = default!;
+        public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

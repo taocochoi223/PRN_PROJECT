@@ -19,7 +19,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
             _context = context;
         }
 
-        public ProductTriCh ProductTriCh { get; set; } = default!;
+        public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

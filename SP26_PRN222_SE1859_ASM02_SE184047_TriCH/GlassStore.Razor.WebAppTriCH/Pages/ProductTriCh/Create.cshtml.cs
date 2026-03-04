@@ -13,10 +13,11 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class CreateModel : PageModel
     {
-        //private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
+        private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
         private readonly IProductTriCHService _productService;
-        public CreateModel(IProductTriCHService productService)
+        public CreateModel(GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext context, IProductTriCHService productService)
         {
+            _context = context;
             _productService = productService;
         }
 
@@ -27,7 +28,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
         }
 
         [BindProperty]
-        public ProductTriCh ProductTriCh { get; set; } = default!;
+        public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
