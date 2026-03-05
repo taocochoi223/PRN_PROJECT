@@ -1,15 +1,15 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authorization;
 using GlassStore.Services.TriCH;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
-    // Any authenticated user can view the index (both Admin and Customers)
-    [Authorize]
-    public class IndexModel : PageModel
+    [Authorize(Roles = "1")]
+    public class ManageModel : PageModel
     {
+        //private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
         private readonly IProductTriCHService _productService;
-        public IndexModel(IProductTriCHService productService)
+        public ManageModel(IProductTriCHService productService)
         {
             _productService = productService;
         }

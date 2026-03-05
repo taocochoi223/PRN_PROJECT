@@ -1,10 +1,47 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Welcome Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">Welcome to GlassStore !</h1>
+    
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <p class="lead text-secondary">
+            Hello, <strong class="text-dark">@User.FindFirst("FullName")?.Value</strong>. You are already logged in.
+        </p>
+
+        <div class="mt-5 d-flex justify-content-center gap-3">
+            <a asp-page="/ProductTriCh/Index" class="btn btn-outline-primary btn-lg px-4 rounded-pill shadow-sm">
+                Shop Products
+            </a>
+
+            @if (User.IsInRole("1"))
+            {
+                <a asp-page="/ProductTriCh/Manage" class="btn btn-warning btn-lg px-4 rounded-pill shadow-sm text-dark fw-bold">
+                    Admin Panel
+                </a>
+            }
+
+            <a asp-page="/Account/Logout" class="btn btn-outline-danger btn-lg px-4 rounded-pill shadow-sm">
+                Logout
+            </a>
+        </div>
+    }
+    else
+    {
+        <p class="lead text-secondary mb-5">
+            Discover the best glasses available online. Log in to start shopping right away!
+        </p>
+
+        <a asp-page="/Account/Login" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow" style="font-size: 1.25rem;">
+            Login to your account
+        </a>
+    }
+</div>
+
+<div class="container mt-5 pt-5 border-top text-center text-muted">
+    <p>ASP.NET Core Razor Pages - Authentication integrated.</p>
 </div>
