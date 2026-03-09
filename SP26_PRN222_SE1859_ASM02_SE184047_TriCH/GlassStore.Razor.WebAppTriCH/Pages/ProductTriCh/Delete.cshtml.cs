@@ -9,17 +9,17 @@ using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
 using Microsoft.AspNetCore.SignalR;
 using GlassStore.Razor.WebAppTriCH.Hubs;
+using GlassStore.Services.TriCH;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class DeleteModel : PageModel
     {
-        private readonly PRN222_EYEWEARSHOPContext _context;
+        private readonly IProductTriCHService _productService;
         private readonly IHubContext<EyewareHub> _hubContext;
-
-        public DeleteModel(PRN222_EYEWEARSHOPContext context, IHubContext<EyewareHub> hubContext)
+        public DeleteModel(IProductTriCHService productService, IHubContext<EyewareHub> hubContext)
         {
-            _context = context;
+            _productService = productService;
             _hubContext = hubContext;
         }
 
@@ -32,17 +32,12 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
             {
                 return NotFound();
             }
-
-            var producttrich = await _context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == id);
-
-            if (producttrich == null)
+            var product = await _productService.GetProductByIdAsync(id.Value);
+            if (product == null)
             {
                 return NotFound();
             }
-            else
-            {
-                ProductTriCh = producttrich;
-            }
+            ProductTriCh = product;
             return Page();
         }
 
@@ -52,19 +47,9 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
             {
                 return NotFound();
             }
-
-            var producttrich = await _context.ProductTriChes.FindAsync(id);
-            if (producttrich != null)
-            {
-                ProductTriCh = producttrich;
-                _context.ProductTriChes.Remove(ProductTriCh);
-                await _context.SaveChangesAsync();
-
-                // 🔔 Thông báo tới tất cả client đang kết nối về việc xóa sản phẩm
-                await _hubContext.Clients.All.SendAsync("ProductDeleted", id);
-            }
-
-            return RedirectToPage("./Index");
+            await _productService.DeleteProductAsync(id.Value);
+            await _hubContext.Clients.All.SendAsync("ProductDeleted", id);
+            return RedirectToPage("./Manage");
         }
     }
 }

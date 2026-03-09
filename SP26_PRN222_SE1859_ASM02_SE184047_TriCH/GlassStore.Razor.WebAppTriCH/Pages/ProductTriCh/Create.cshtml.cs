@@ -8,40 +8,45 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
+using Microsoft.AspNetCore.SignalR;
+using GlassStore.Razor.WebAppTriCH.Hubs;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class CreateModel : PageModel
     {
-        private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
         private readonly IProductTriCHService _productService;
-        public CreateModel(GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext context, IProductTriCHService productService)
-        {
-            _context = context;
-            _productService = productService;
-        }
+        private readonly ICategoryTriCHService _categoryService;
+        private readonly IHubContext<EyewareHub> _hubContext;
 
-        public IActionResult OnGet()
+        public CreateModel(IProductTriCHService productService, ICategoryTriCHService categoryService, IHubContext<EyewareHub> hubContext)
         {
-        ViewData["CategoryTriChid"] = new SelectList(_context.CategoryTriChes, "CategoryTriChid", "CategoryName");
-            return Page();
+            _productService = productService;
+            _categoryService = categoryService;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
         public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public async Task<IActionResult> OnGetAsync()
+        {
+            var cate = await _categoryService.GetAllCategoriesAsync();
+            ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                var cate = await _categoryService.GetAllCategoriesAsync();
+                ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
                 return Page();
             }
-
-            _context.ProductTriChes.Add(ProductTriCh);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            await _productService.AddProductAsync(ProductTriCh);
+            await _hubContext.Clients.All.SendAsync("ProductAdded", ProductTriCh);
+            return RedirectToPage("./Manage");
         }
     }
 }

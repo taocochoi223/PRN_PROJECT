@@ -8,16 +8,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
-
+using GlassStore.Services.TriCH;
+using Microsoft.AspNetCore.SignalR;
+using GlassStore.Razor.WebAppTriCH.Hubs;
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class EditModel : PageModel
     {
-        private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
+        private readonly IProductTriCHService _productService;
+        private readonly ICategoryTriCHService _categoryService;
+        private readonly IHubContext<EyewareHub> _hubContext;
 
-        public EditModel(GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext context)
+        public EditModel(IProductTriCHService productService, ICategoryTriCHService categoryService, IHubContext<EyewareHub> hubContext)
         {
-            _context = context;
+            _productService = productService;
+            _categoryService = categoryService;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -29,50 +35,28 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
             {
                 return NotFound();
             }
-
-            var producttrich =  await _context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == id);
-            if (producttrich == null)
+            var product = await _productService.GetProductByIdAsync(id.Value);
+            if (product == null)
             {
                 return NotFound();
             }
-            ProductTriCh = producttrich;
-           ViewData["CategoryTriChid"] = new SelectList(_context.CategoryTriChes, "CategoryTriChid", "CategoryName");
+            ProductTriCh = product;
+            var cate = await _categoryService.GetAllCategoriesAsync();
+            ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
+                var cate = await _categoryService.GetAllCategoriesAsync();
+                ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
                 return Page();
             }
-
-            _context.Attach(ProductTriCh).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductTriChExists(ProductTriCh.ProductTriChid))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return RedirectToPage("./Index");
-        }
-
-        private bool ProductTriChExists(int id)
-        {
-            return _context.ProductTriChes.Any(e => e.ProductTriChid == id);
+            await _productService.UpdateProductAsync(ProductTriCh);
+            await _hubContext.Clients.All.SendAsync("ProductUpdated", ProductTriCh.ProductTriChid);
+            return RedirectToPage("./Manage");
         }
     }
 }

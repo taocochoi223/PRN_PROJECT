@@ -21,7 +21,11 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         {
             if (User.Identity!.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                if(User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                    return RedirectToAction("Manage", "ProductTriCH");
+                }
+                return RedirectToAction("Index", "ProductTriCH");
             }
             return View();
         }
@@ -77,7 +81,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                if (user.RoleId == 1) 
+                if (user.RoleId == 1 || user.RoleId == 2) 
                 {
                     return RedirectToAction("Manage", "ProductTriCH");
                 }

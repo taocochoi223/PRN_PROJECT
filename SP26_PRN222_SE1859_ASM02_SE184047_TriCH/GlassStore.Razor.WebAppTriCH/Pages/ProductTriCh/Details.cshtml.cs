@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
+using GlassStore.Services.TriCH;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
     public class DetailsModel : PageModel
     {
-        private readonly GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext _context;
-
-        public DetailsModel(GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext context)
+        private readonly IProductTriCHService _productService;
+        public DetailsModel(IProductTriCHService productService)
         {
-            _context = context;
+            _productService = productService;
         }
 
         public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
@@ -27,16 +27,12 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
             {
                 return NotFound();
             }
-
-            var producttrich = await _context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == id);
-            if (producttrich == null)
+            var product = await _productService.GetProductByIdAsync(id.Value);
+            if (product == null)
             {
                 return NotFound();
             }
-            else
-            {
-                ProductTriCh = producttrich;
-            }
+            ProductTriCh = product;
             return Page();
         }
     }
