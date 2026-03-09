@@ -62,6 +62,13 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
                 await Clients.All.SendAsync("ReceiveHubCreate_productTriCh", broadcastData);
             }
         }
+
+        // added update helper to mirror page-model broadcast and allow clients to invoke via hub
+        public async Task HubUpdate_productTriCh(ProductTriCh item)
+        {
+            await _productService.UpdateProductAsync(item);
+            await Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", item.ProductTriChid);
+        }
         #endregion
 
         #region CategoryTriCh Hubs

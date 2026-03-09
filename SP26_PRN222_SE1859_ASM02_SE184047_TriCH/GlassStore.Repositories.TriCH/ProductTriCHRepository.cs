@@ -54,5 +54,12 @@ namespace GlassStore.Repositories.TriCH
                 .ToListAsync();
             return await products;
         }
+
+        // helper to detect duplicate SKU values
+        public async Task<bool> SkuExistsAsync(string sku)
+        {
+            if (string.IsNullOrWhiteSpace(sku)) return false;
+            return await _context.ProductTriChes.AnyAsync(p => p.Sku == sku);
+        }
     }
 }

@@ -54,8 +54,23 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
                 return Page();
             }
+            // if SKU changed, ensure no other product uses it
+            if (!string.IsNullOrWhiteSpace(ProductTriCh.Sku))
+            {
+                var exists = await _productService.SkuExistsAsync(ProductTriCh.Sku);
+                // the repository check doesn't skip current product, so only error if it's another record
+                var current = await _productService.GetProductByIdAsync(ProductTriCh.ProductTriChid);
+                if (exists && current != null && !string.Equals(current.Sku, ProductTriCh.Sku, StringComparison.OrdinalIgnoreCase))
+                {
+                    ModelState.AddModelError("ProductTriCh.Sku", "SKU đã tồn tại. Vui lòng nhập mã khác.");
+                    var cate = await _categoryService.GetAllCategoriesAsync();
+                    ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
+                    return Page();
+                }
+            }
             await _productService.UpdateProductAsync(ProductTriCh);
-            await _hubContext.Clients.All.SendAsync("ProductUpdated", ProductTriCh.ProductTriChid);
+            // broadcast a standardized update event in case clients subscribe
+            await _hubContext.Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", ProductTriCh.ProductTriChid);
             return RedirectToPage("./Manage");
         }
     }

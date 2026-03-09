@@ -48,7 +48,8 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 return NotFound();
             }
             await _productService.DeleteProductAsync(id.Value);
-            await _hubContext.Clients.All.SendAsync("ProductDeleted", id);
+            // broadcast using the same event name the hub clients listen for
+            await _hubContext.Clients.All.SendAsync("ReceiveHubDelete_productTriCh", id.Value);
             return RedirectToPage("./Manage");
         }
     }

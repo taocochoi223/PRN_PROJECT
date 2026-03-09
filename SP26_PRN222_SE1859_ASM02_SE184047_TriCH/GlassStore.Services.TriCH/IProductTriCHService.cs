@@ -10,5 +10,7 @@ namespace GlassStore.Services.TriCH
         Task AddProductAsync(ProductTriCh product);
         Task UpdateProductAsync(ProductTriCh product);
         Task DeleteProductAsync(int id);
+        // check whether an SKU value already exists (used to prevent unique constraint violations)
+        Task<bool> SkuExistsAsync(string sku);
     }
 }

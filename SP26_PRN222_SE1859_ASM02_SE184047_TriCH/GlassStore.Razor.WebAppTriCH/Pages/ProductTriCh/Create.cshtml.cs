@@ -44,8 +44,21 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
                 return Page();
             }
+            // check for duplicate SKU before trying to save
+            if (!string.IsNullOrWhiteSpace(ProductTriCh.Sku))
+            {
+                bool exists = await _productService.SkuExistsAsync(ProductTriCh.Sku);
+                if (exists)
+                {
+                    ModelState.AddModelError("ProductTriCh.Sku", "SKU đã tồn tại. Vui lòng nhập mã khác.");
+                    var cate = await _categoryService.GetAllCategoriesAsync();
+                    ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
+                    return Page();
+                }
+            }
             await _productService.AddProductAsync(ProductTriCh);
-            await _hubContext.Clients.All.SendAsync("ProductAdded", ProductTriCh);
+            // use consistent ReceiveHubCreate event name
+            await _hubContext.Clients.All.SendAsync("ReceiveHubCreate_productTriCh", ProductTriCh);
             return RedirectToPage("./Manage");
         }
     }

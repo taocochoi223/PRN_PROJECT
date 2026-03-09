@@ -98,8 +98,8 @@
                 @Html.DisplayFor(modelItem => item.CategoryTriCh.CategoryName)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.ProductTriChid">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ProductTriChid">Details</a> |
+                <a asp-page="./Edit" asp-route-id="@item.ProductTriChid">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.ProductTriChid">Details</a>
                 <a asp-page="./Delete" asp-route-id="@item.ProductTriChid">Delete</a>
             </td>
         </tr>
@@ -158,6 +158,11 @@
                 `;
                 tbody.prepend(row); //chèn hàng mới vào đầu bảng
             }
+        });
+
+        connection.on("ReceiveHubUpdate_productTriCh", function(id) {
+            console.log("updated row: "+id);
+            // optionally reload page or fetch the updated row via AJAX
         });
 
         function deleteItem(id) {

@@ -22,6 +22,12 @@ namespace GlassStore.Services.TriCH
             return await _repo.GetAllProductAsync(search);
         }
 
+        // utility used by pages to validate SKU before creation/update
+        public async Task<bool> SkuExistsAsync(string sku)
+        {
+            return await _repo.SkuExistsAsync(sku);
+        }
+
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
         {
             return await _repo.GetProductByIdAsync(productId);
@@ -34,6 +40,15 @@ namespace GlassStore.Services.TriCH
 
         public async Task AddProductAsync(ProductTriCh product)
         {
+            // ensure SKU unique before inserting
+            if (!string.IsNullOrWhiteSpace(product.Sku))
+            {
+                var exists = await _repo.SkuExistsAsync(product.Sku);
+                if (exists)
+                {
+                    throw new InvalidOperationException("SKU đã tồn tại. Vui lòng nhập mã khác.");
+                }
+            }
             product.Status = 1; 
             product.CreatedAt = DateTime.Now;
             await _repo.CreateAsync(product);

@@ -75,5 +75,11 @@
                 productList.prepend(newCol); // Insert at the top
             }
         });
+
+        // notify when a product is updated (optional handling)
+        connection.on("ReceiveHubUpdate_productTriCh", function (id) {
+            console.log("Product updated: " + id);
+            // developers could refresh card or fetch details here
+        });
     </script>
 }
