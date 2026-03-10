@@ -11,6 +11,5 @@ namespace GlassStore.Services.TriCH
         Task UpdateProductAsync(ProductTriCh product);
         Task DeleteProductAsync(int id);
         Task<bool> SkuExistsAsync(string sku);
-
     }
 }

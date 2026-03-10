@@ -1,0 +1,103 @@
+﻿@page "/producttriches/delete"
+@using Microsoft.EntityFrameworkCore
+@using GlassStore.Entities.TriCH.Models
+@inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>ProductTriCh</h2>
+    <hr />
+    @if (producttrich is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">ProductName</dt>
+            <dd class="col-sm-10">@producttrich.ProductName</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Sku</dt>
+            <dd class="col-sm-10">@producttrich.Sku</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CategoryTriChid</dt>
+            <dd class="col-sm-10">@producttrich.CategoryTriChid</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Brand</dt>
+            <dd class="col-sm-10">@producttrich.Brand</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Price</dt>
+            <dd class="col-sm-10">@producttrich.Price</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@producttrich.Description</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">FrameType</dt>
+            <dd class="col-sm-10">@producttrich.FrameType</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Material</dt>
+            <dd class="col-sm-10">@producttrich.Material</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Dimensions</dt>
+            <dd class="col-sm-10">@producttrich.Dimensions</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">StockQuantity</dt>
+            <dd class="col-sm-10">@producttrich.StockQuantity</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@producttrich.Status</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@producttrich.CreatedAt</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@producttrich.UpdatedAt</dd>
+        </dl>
+        <EditForm method="post" Model="producttrich" OnValidSubmit="DeleteProductTriCh" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(producttrich is null)">Delete</button> |
+            <a href="/producttriches">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private ProductTriCh? producttrich;
+
+    [SupplyParameterFromQuery]
+    private int ProductTriChid { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        producttrich = await context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == ProductTriChid);
+
+        if (producttrich is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteProductTriCh()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.ProductTriChes.Remove(producttrich!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/producttriches");
+    }
+}

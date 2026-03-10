@@ -22,8 +22,6 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
             _colorService = colorService;
             _imageService = imageService;
         }
-
-        // Bổ sung thêm SendMessage để Chat.js không bị lỗi khi người dùng click
         public async Task SendMessage(string user, string message)
         {
             await Clients.All.SendAsync("ReceiveMessage", user, message);
@@ -63,7 +61,6 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
             }
         }
 
-        // added update helper to mirror page-model broadcast and allow clients to invoke via hub
         public async Task HubUpdate_productTriCh(ProductTriCh item)
         {
             await _productService.UpdateProductAsync(item);
@@ -94,6 +91,12 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
                 };
                 await Clients.All.SendAsync("ReceiveHubCreate_categoryTriCh", broadcastData);
             }
+        }
+
+        public async Task HubUpdate_categoryTriCh(CategoryTriCh item)
+        {
+            await _categoryService.UpdateCategoryAsync(item);
+            await Clients.All.SendAsync("ReceiveHubUpdate_categoryTriCh", item.CategoryTriChid);
         }
         #endregion
 

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36930.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlassStore.Entities.TriCH", "GlassStore.Entities.TriCH\GlassStore.Entities.TriCH.csproj", "{902AB345-5B4D-9C54-0C86-2727EAE555EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlassStore.Repositories.TriCH", "GlassStore.Repositories.TriCH\GlassStore.Repositories.TriCH.csproj", "{F0AC28F5-F0EE-4910-B940-E3D5841FE1CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlassStore.Services.TriCH", "GlassStore.Services.TriCH\GlassStore.Services.TriCH.csproj", "{CB2ACF56-9EEF-55B9-7A7E-3BF4FE72B310}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlassStore.BlazorWebApp.TriCH", "GlassStore.BlazorWebApp.TriCH\GlassStore.BlazorWebApp.TriCH.csproj", "{4278C225-20ED-4F0C-9163-6DB8D002D415}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{902AB345-5B4D-9C54-0C86-2727EAE555EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{902AB345-5B4D-9C54-0C86-2727EAE555EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{902AB345-5B4D-9C54-0C86-2727EAE555EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{902AB345-5B4D-9C54-0C86-2727EAE555EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0AC28F5-F0EE-4910-B940-E3D5841FE1CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0AC28F5-F0EE-4910-B940-E3D5841FE1CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0AC28F5-F0EE-4910-B940-E3D5841FE1CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0AC28F5-F0EE-4910-B940-E3D5841FE1CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB2ACF56-9EEF-55B9-7A7E-3BF4FE72B310}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB2ACF56-9EEF-55B9-7A7E-3BF4FE72B310}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB2ACF56-9EEF-55B9-7A7E-3BF4FE72B310}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB2ACF56-9EEF-55B9-7A7E-3BF4FE72B310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4278C225-20ED-4F0C-9163-6DB8D002D415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4278C225-20ED-4F0C-9163-6DB8D002D415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4278C225-20ED-4F0C-9163-6DB8D002D415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4278C225-20ED-4F0C-9163-6DB8D002D415}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C2DF393A-9809-4E82-BC3F-A388785F8E90}
+	EndGlobalSection
+EndGlobal

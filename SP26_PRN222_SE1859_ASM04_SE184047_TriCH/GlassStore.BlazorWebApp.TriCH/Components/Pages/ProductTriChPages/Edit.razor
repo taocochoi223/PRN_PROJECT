@@ -1,0 +1,164 @@
+﻿@page "/producttriches/edit"
+@using Microsoft.EntityFrameworkCore
+@using GlassStore.Entities.TriCH.Models
+@inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>ProductTriCh</h2>
+<hr />
+@if (ProductTriCh is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="ProductTriCh" OnValidSubmit="UpdateProductTriCh" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="ProductTriCh.ProductTriChid" value="@ProductTriCh.ProductTriChid" />
+                <div class="mb-3">
+                    <label for="productname" class="form-label">ProductName:</label>
+                    <InputText id="productname" @bind-Value="ProductTriCh.ProductName" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.ProductName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="sku" class="form-label">Sku:</label>
+                    <InputText id="sku" @bind-Value="ProductTriCh.Sku" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Sku" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="categorytrichid" class="form-label">CategoryTriChid:</label>
+                    <InputNumber id="categorytrichid" @bind-Value="ProductTriCh.CategoryTriChid" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.CategoryTriChid" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="brand" class="form-label">Brand:</label>
+                    <InputText id="brand" @bind-Value="ProductTriCh.Brand" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Brand" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price:</label>
+                    <InputNumber id="price" @bind-Value="ProductTriCh.Price" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Price" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description:</label>
+                    <InputText id="description" @bind-Value="ProductTriCh.Description" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Description" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="frametype" class="form-label">FrameType:</label>
+                    <InputText id="frametype" @bind-Value="ProductTriCh.FrameType" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.FrameType" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="material" class="form-label">Material:</label>
+                    <InputText id="material" @bind-Value="ProductTriCh.Material" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Material" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dimensions" class="form-label">Dimensions:</label>
+                    <InputText id="dimensions" @bind-Value="ProductTriCh.Dimensions" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.Dimensions" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="stockquantity" class="form-label">StockQuantity:</label>
+                    <InputNumber id="stockquantity" @bind-Value="ProductTriCh.StockQuantity" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.StockQuantity" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status:</label>
+                    <InputText id="status" @bind-Value="StatusString" class="form-control" />
+                    <ValidationMessage For="() => StatusString" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdat" class="form-label">CreatedAt:</label>
+                    <InputDate id="createdat" @bind-Value="ProductTriCh.CreatedAt" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.CreatedAt" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedat" class="form-label">UpdatedAt:</label>
+                    <InputDate id="updatedat" @bind-Value="ProductTriCh.UpdatedAt" class="form-control" />
+                    <ValidationMessage For="() => ProductTriCh.UpdatedAt" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/producttriches">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int ProductTriChid { get; set; }
+
+    [SupplyParameterFromForm]
+    private ProductTriCh? ProductTriCh { get; set; }
+
+    private string StatusString { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        ProductTriCh ??= await context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == ProductTriChid);
+
+        if (ProductTriCh is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            StatusString = ProductTriCh.Status?.ToString() ?? "";
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateProductTriCh()
+    {
+        if (byte.TryParse(StatusString, out var status))
+        {
+            ProductTriCh!.Status = status;
+        }
+        else
+        {
+            ProductTriCh!.Status = null;
+        }
+
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(ProductTriCh!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProductTriChExists(ProductTriCh!.ProductTriChid))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/producttriches");
+    }
+
+    private bool ProductTriChExists(int producttrichid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.ProductTriChes.Any(e => e.ProductTriChid == producttrichid);
+    }
+}

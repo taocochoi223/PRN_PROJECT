@@ -1,0 +1,89 @@
+﻿@page "/producttriches/details"
+@using Microsoft.EntityFrameworkCore
+@using GlassStore.Entities.TriCH.Models
+@* @inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory
+@inject NavigationManager NavigationManager *@
+@inject GlassStore.Services.TriCH.IProductTriCHService _productService;
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>ProductTriCh</h2>
+    <hr />
+    @if (producttrich is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Images</dt>
+            <dd class="col-sm-10">
+                @if (producttrich.ProductImageTriChes != null && producttrich.ProductImageTriChes.Any())
+                {
+                    foreach (var image in producttrich.ProductImageTriChes.OrderBy(i => i.DisplayOrder ?? 999))
+                    {
+                        <img src="@image.ImageUrl" alt="Product Image" style="width: 100px; height: 100px; margin: 5px;" />
+                    }
+                }
+                else
+                {
+                    <span>No images available</span>
+                }
+            </dd>
+            <dt class="col-sm-2">ProductName</dt>
+            <dd class="col-sm-10">@producttrich.ProductName</dd>
+            <dt class="col-sm-2">Sku</dt>
+            <dd class="col-sm-10">@producttrich.Sku</dd>
+            <dt class="col-sm-2">CategoryTriChid</dt>
+            <dd class="col-sm-10">@producttrich.CategoryTriChid</dd>
+            <dt class="col-sm-2">Brand</dt>
+            <dd class="col-sm-10">@producttrich.Brand</dd>
+            <dt class="col-sm-2">Price</dt>
+            <dd class="col-sm-10">@producttrich.Price</dd>
+            <dt class="col-sm-2">Description</dt>
+            <dd class="col-sm-10">@producttrich.Description</dd>
+            <dt class="col-sm-2">FrameType</dt>
+            <dd class="col-sm-10">@producttrich.FrameType</dd>
+            <dt class="col-sm-2">Material</dt>
+            <dd class="col-sm-10">@producttrich.Material</dd>
+            <dt class="col-sm-2">Dimensions</dt>
+            <dd class="col-sm-10">@producttrich.Dimensions</dd>
+            <dt class="col-sm-2">StockQuantity</dt>
+            <dd class="col-sm-10">@producttrich.StockQuantity</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@producttrich.Status</dd>
+            <dt class="col-sm-2">CreatedAt</dt>
+            <dd class="col-sm-10">@producttrich.CreatedAt</dd>
+            <dt class="col-sm-2">UpdatedAt</dt>
+            <dd class="col-sm-10">@producttrich.UpdatedAt</dd>
+        </dl>
+        <div>
+            <a href="@($"/producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a> |
+            <a href="@($"/producttriches")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private ProductTriCh? producttrich;
+
+    [SupplyParameterFromQuery]
+    private int ProductTriChid { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            producttrich = await _productService.GetProductByIdAsync(ProductTriChid);
+            if(producttrich == null)
+            {
+                throw new Exception("Product not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error loading product details: {ex.Message}", ex);
+        }
+    }
+}

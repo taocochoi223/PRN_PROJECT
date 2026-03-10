@@ -108,7 +108,7 @@
         connection.on("ReceiveHubDelete_productTriCh", function (id) {
             var currentId = parseInt("@Model.ProductTriCh.ProductTriChid");
             if (id == currentId) {
-                // Xóa nội dung và hiện thông báo thay vì redirect
+                alert("Sản phẩm này đã bị xoá bởi người khác");
                 document.getElementById("details-content").style.display = "none";
                 document.getElementById("details-actions").style.display = "none";
                 document.getElementById("deleted-message").style.display = "block";

@@ -1,0 +1,64 @@
+﻿@page "/producttriches"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using GlassStore.Entities.TriCH.Models
+@using GlassStore.Repositories.TriCH.DBContext
+@* @implements IAsyncDisposable
+@inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory *@
+@inject GlassStore.Services.TriCH.IProductTriCHService _productService;
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="producttriches/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="product">
+    <TemplateColumn Context="producttrich" Title="Images">
+        @if (producttrich.ProductImageTriChes != null && producttrich.ProductImageTriChes.Any())
+        {
+            var primaryImage = producttrich.ProductImageTriChes.FirstOrDefault(i => i.IsPrimary == true) ?? producttrich.ProductImageTriChes.First();
+            <img src="@primaryImage.ImageUrl" alt="Product Image" style="width: 50px; height: 50px;" />
+        }
+    </TemplateColumn>
+    <PropertyColumn Property="producttrich => producttrich.ProductName" />
+    <PropertyColumn Property="producttrich => producttrich.Sku" />
+    <PropertyColumn Property="producttrich => producttrich.CategoryTriChid" />
+    <PropertyColumn Property="producttrich => producttrich.Brand" />
+    <PropertyColumn Property="producttrich => producttrich.Price" />
+    <PropertyColumn Property="producttrich => producttrich.Description" />
+    <PropertyColumn Property="producttrich => producttrich.FrameType" />
+    <PropertyColumn Property="producttrich => producttrich.Material" />
+    <PropertyColumn Property="producttrich => producttrich.Dimensions" />
+    <PropertyColumn Property="producttrich => producttrich.StockQuantity" />
+    <PropertyColumn Property="producttrich => producttrich.Status" />
+    <PropertyColumn Property="producttrich => producttrich.CreatedAt" />
+    <PropertyColumn Property="producttrich => producttrich.UpdatedAt" />
+
+    <TemplateColumn Context="producttrich">
+        <a href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a> |
+        <a href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a> |
+        <a href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    // private PRN222_EYEWEARSHOPContext context = default!;
+    private IQueryable<ProductTriCh> product = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        // context = DbFactory.CreateDbContext();
+
+        try
+        {
+            product = (await _productService.GetAllProductAsync()).AsQueryable();
+        }catch (Exception ex)
+        {
+            throw new Exception($"Error fetching data: {ex.Message}", ex);
+        }
+    }
+
+    //public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,54 @@
+﻿@page
+@model GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh.ManageModel
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<h1>Manage Categories</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryTriCh[0].CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryTriCh[0].Slug)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryTriCh[0].Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryTriCh[0].Parent)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.CategoryTriCh) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Slug)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Parent.CategoryName)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.CategoryTriChid">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.CategoryTriChid">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.CategoryTriChid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
