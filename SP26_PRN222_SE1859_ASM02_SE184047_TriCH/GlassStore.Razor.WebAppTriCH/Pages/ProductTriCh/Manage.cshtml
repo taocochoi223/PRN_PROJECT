@@ -162,8 +162,6 @@
             if (tbody) {
                 var row = document.createElement("tr");
                 row.id = "row-" + item.productTriChid;
-
-                // Format dates if they exist
                 var createdAt = item.createdAt ? new Date(item.createdAt).toLocaleString() : "";
                 var updatedAt = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "";
                 var categoryName = item.categoryName || "";
@@ -191,13 +189,31 @@
                         </div>
                     </td>
                 `;
-                tbody.prepend(row); //chèn hàng mới vào đầu bảng
+                tbody.prepend(row);
             }
         });
 
-        connection.on("ReceiveHubUpdate_productTriCh", function(id) {
-            console.log("updated row: "+id);
-            // optionally reload page or fetch the updated row via AJAX
+        connection.on("ReceiveHubUpdate_productTriCh", function (item) {
+            console.log("Product updated:", item);
+            var row = document.getElementById("row-" + item.productTriChid);
+            if (row) {
+                var updatedAt = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "";
+                
+                row.cells[0].innerText = item.productName || "";
+                row.cells[1].innerText = item.sku || "";
+                row.cells[2].innerText = item.brand || "";
+                row.cells[3].innerText = item.price || 0;
+                row.cells[4].innerText = item.description || "";
+                row.cells[5].innerText = item.frameType || "";
+                row.cells[6].innerText = item.material || "";
+                row.cells[7].innerText = item.dimensions || "";
+                row.cells[8].innerText = item.stockQuantity || 0;
+                row.cells[9].innerText = item.status || 0;
+                row.cells[11].innerText = updatedAt;
+                row.cells[12].innerText = item.categoryName || "";
+                row.style.backgroundColor = "#fff3cd";
+                setTimeout(() => { row.style.backgroundColor = ""; }, 2000);
+            }
         });
 
         function deleteItem(id) {

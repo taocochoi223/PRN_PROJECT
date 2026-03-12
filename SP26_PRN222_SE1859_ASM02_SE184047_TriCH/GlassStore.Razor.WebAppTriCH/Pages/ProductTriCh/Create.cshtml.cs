@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,8 +57,28 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 }
             }
             await _productService.AddProductAsync(ProductTriCh);
-            // use consistent ReceiveHubCreate event name
-            await _hubContext.Clients.All.SendAsync("ReceiveHubCreate_productTriCh", ProductTriCh);
+            // Fetch with category name for broadcast
+            var newItem = await _productService.GetProductByIdAsync(ProductTriCh.ProductTriChid);
+            if (newItem != null)
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveHubCreate_productTriCh", new
+                {
+                    productTriChid = newItem.ProductTriChid,
+                    productName = newItem.ProductName,
+                    sku = newItem.Sku,
+                    brand = newItem.Brand,
+                    price = newItem.Price,
+                    description = newItem.Description,
+                    frameType = newItem.FrameType,
+                    material = newItem.Material,
+                    dimensions = newItem.Dimensions,
+                    stockQuantity = newItem.StockQuantity,
+                    status = newItem.Status,
+                    createdAt = newItem.CreatedAt,
+                    updatedAt = newItem.UpdatedAt,
+                    categoryName = newItem.CategoryTriCh != null ? newItem.CategoryTriCh.CategoryName : null
+                });
+            }
             return RedirectToPage("./Manage");
         }
     }

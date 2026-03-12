@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh.ManageModel
 
 @{
@@ -28,9 +28,9 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="table-body">
 @foreach (var item in Model.CategoryTriCh) {
-        <tr>
+        <tr id="row-@item.CategoryTriChid">
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryName)
             </td>
@@ -40,16 +40,73 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            <td>
+            <td id="parent-name-@item.CategoryTriChid">
                 @Html.DisplayFor(modelItem => item.Parent.CategoryName)
             </td>
 
-            <td class="d-flex gap-2">
-                <a asp-page="./Edit" asp-route-id="@item.CategoryTriChid" class="btn btn-primary btn-sm">Edit</a>
-                <a asp-page="./Details" asp-route-id="@item.CategoryTriChid" class="btn btn-info btn-sm">Details</a>
-                <a asp-page="./Delete" asp-route-id="@item.CategoryTriChid" class="btn btn-danger btn-sm">Delete</a>
+            <td class="d-flex gap-1">
+                <a asp-page="./Edit" asp-route-id="@item.CategoryTriChid" class="btn btn-primary">Edit</a>
+                <a asp-page="./Details" asp-route-id="@item.CategoryTriChid" class="btn btn-info text-white">Details</a>
+                <a asp-page="./Delete" asp-route-id="@item.CategoryTriChid" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/EyewareHub").build();
+
+        connection.start().then(function () {
+            console.log("SignalR connected for Categories");
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        connection.on("ReceiveHubDelete_categoryTriCh", function (id) {
+            var row = document.getElementById("row-" + id);
+            if (row) {
+                row.remove();
+            }
+        });
+
+        connection.on("ReceiveHubCreate_categoryTriCh", function (item) {
+            console.log("New category received:", item);
+            var tbody = document.getElementById("table-body");
+            if (tbody) {
+                var row = document.createElement("tr");
+                row.id = "row-" + item.categoryTriChid;
+
+                row.innerHTML = `
+                    <td>${item.categoryName || ""}</td>
+                    <td>${item.slug || ""}</td>
+                    <td>${item.status || 0}</td>
+                    <td>${item.parentName || ""}</td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="./Edit?id=${item.categoryTriChid}" class="btn btn-primary">Edit</a>
+                            <a href="./Details?id=${item.categoryTriChid}" class="btn btn-info text-white">Details</a>
+                            <a href="./Delete?id=${item.categoryTriChid}" class="btn btn-danger">Delete</a>
+                        </div>
+                    </td>
+                `;
+                tbody.prepend(row);
+            }
+        });
+
+        connection.on("ReceiveHubUpdate_categoryTriCh", function (item) {
+            console.log("Category updated:", item);
+            var row = document.getElementById("row-" + item.categoryTriChid);
+            if (row) {
+                row.cells[0].innerText = item.categoryName || "";
+                row.cells[1].innerText = item.slug || "";
+                row.cells[2].innerText = item.status || 0;
+                if(item.parentName) {
+                     row.cells[3].innerText = item.parentName;
+                }
+            }
+        });
+    </script>
+}

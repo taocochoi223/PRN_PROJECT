@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -54,11 +54,9 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                 ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
                 return Page();
             }
-            // if SKU changed, ensure no other product uses it
             if (!string.IsNullOrWhiteSpace(ProductTriCh.Sku))
             {
                 var exists = await _productService.SkuExistsAsync(ProductTriCh.Sku);
-                // the repository check doesn't skip current product, so only error if it's another record
                 var current = await _productService.GetProductByIdAsync(ProductTriCh.ProductTriChid);
                 if (exists && current != null && !string.Equals(current.Sku, ProductTriCh.Sku, StringComparison.OrdinalIgnoreCase))
                 {
@@ -68,9 +66,28 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
                     return Page();
                 }
             }
-            await _productService.UpdateProductAsync(ProductTriCh);
-            // broadcast a standardized update event in case clients subscribe
-            await _hubContext.Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", ProductTriCh.ProductTriChid);
+            await _productService.UpdateProductAsync(ProductTriCh);            
+            var updatedItem = await _productService.GetProductByIdAsync(ProductTriCh.ProductTriChid);
+            if (updatedItem != null)
+            {
+                await _hubContext.Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", new
+                {
+                    productTriChid = updatedItem.ProductTriChid,
+                    productName = updatedItem.ProductName,
+                    sku = updatedItem.Sku,
+                    brand = updatedItem.Brand,
+                    price = updatedItem.Price,
+                    description = updatedItem.Description,
+                    frameType = updatedItem.FrameType,
+                    material = updatedItem.Material,
+                    dimensions = updatedItem.Dimensions,
+                    stockQuantity = updatedItem.StockQuantity,
+                    status = updatedItem.Status,
+                    updatedAt = updatedItem.UpdatedAt,
+                    categoryName = updatedItem.CategoryTriCh != null ? updatedItem.CategoryTriCh.CategoryName : null
+                });
+            }
+
             return RedirectToPage("./Manage");
         }
     }

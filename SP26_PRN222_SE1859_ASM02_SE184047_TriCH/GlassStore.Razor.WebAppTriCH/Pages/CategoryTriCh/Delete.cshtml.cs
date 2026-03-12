@@ -8,16 +8,20 @@ using Microsoft.EntityFrameworkCore;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
+using Microsoft.AspNetCore.SignalR;
+using GlassStore.Razor.WebAppTriCH.Hubs;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 {
     public class DeleteModel : PageModel
     {
         private readonly ICategoryTriCHService _categoryService;
+        private readonly IHubContext<EyewareHub> _hubContext;
 
-        public DeleteModel(ICategoryTriCHService cate)
+        public DeleteModel(ICategoryTriCHService cate, IHubContext<EyewareHub> hubContext)
         {
             _categoryService = cate;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -37,7 +41,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
             {
                 return NotFound();
             }
-           CategoryTriCh = cate;
+            CategoryTriCh = cate;
             return Page();
         }
 
@@ -52,9 +56,11 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
             if (categorytrich != null)
             {
                 await _categoryService.DeleteCategoryAsync(id.Value);
+                await _hubContext.Clients.All.SendAsync("ReceiveHubDelete_categoryTriCh", id.Value);
+
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Manage");
         }
     }
 }

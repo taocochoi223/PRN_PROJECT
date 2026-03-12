@@ -1,7 +1,7 @@
 @page "/producttriches/edit"
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
-@inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory
+@inject GlassStore.Services.TriCH.IProductTriCHService _service;
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
@@ -114,22 +114,23 @@ else
     [SupplyParameterFromForm]
     private ProductTriCh? ProductTriCh { get; set; }
 
+    [SupplyParameterFromForm]
     private string StatusString { get; set; } = "";
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        ProductTriCh ??= await context.ProductTriChes.FirstOrDefaultAsync(m => m.ProductTriChid == ProductTriChid);
+        ProductTriCh ??= await _service.GetProductByIdAsync(ProductTriChid);
 
         if (ProductTriCh is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
-        else
+        else if (string.IsNullOrEmpty(StatusString))
         {
             StatusString = ProductTriCh.Status?.ToString() ?? "";
         }
     }
+
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
@@ -144,31 +145,16 @@ else
             ProductTriCh!.Status = null;
         }
 
-        using var context = DbFactory.CreateDbContext();
-        context.Attach(ProductTriCh!).State = EntityState.Modified;
-
         try
         {
-            await context.SaveChangesAsync();
+            await _service.UpdateProductAsync(ProductTriCh!);
+            NavigationManager.NavigateTo("/producttriches", forceLoad: true);
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception ex)
         {
-            if (!ProductTriChExists(ProductTriCh!.ProductTriChid))
-            {
-                NavigationManager.NavigateTo("notfound");
-            }
-            else
-            {
-                throw;
-            }
+            Console.WriteLine($"Error: {ex.Message}");
         }
-
-        NavigationManager.NavigateTo("/producttriches");
     }
 
-    private bool ProductTriChExists(int producttrichid)
-    {
-        using var context = DbFactory.CreateDbContext();
-        return context.ProductTriChes.Any(e => e.ProductTriChid == producttrichid);
-    }
+
 }

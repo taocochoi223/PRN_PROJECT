@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,14 +52,21 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
                 return Page();
             }
             await _categoryService.UpdateCategoryAsync(CategoryTriCh);
-            await _hubContext.Clients.All.SendAsync("ReceiveHubUpdate_categoryTriCh", new
+            
+            // Fetch updated item with parent name for broadcast
+            var updatedItem = await _categoryService.GetCategoryByIdAsync(CategoryTriCh.CategoryTriChid);
+            if (updatedItem != null)
             {
-                categoryTriChid = CategoryTriCh.CategoryTriChid,
-                categoryName = CategoryTriCh.CategoryName,
-                slug = CategoryTriCh.Slug,
-                parentId = CategoryTriCh.ParentId,
-                status = CategoryTriCh.Status
-            });
+                await _hubContext.Clients.All.SendAsync("ReceiveHubUpdate_categoryTriCh", new
+                {
+                    categoryTriChid = updatedItem.CategoryTriChid,
+                    categoryName = updatedItem.CategoryName,
+                    slug = updatedItem.Slug,
+                    parentId = updatedItem.ParentId,
+                    status = updatedItem.Status,
+                    parentName = updatedItem.Parent != null ? updatedItem.Parent.CategoryName : ""
+                });
+            }
             return RedirectToPage("./Manage");
 
         }

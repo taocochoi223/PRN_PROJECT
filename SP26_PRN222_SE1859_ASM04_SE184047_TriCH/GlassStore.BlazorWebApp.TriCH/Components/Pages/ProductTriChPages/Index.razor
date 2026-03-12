@@ -1,23 +1,5 @@
 @page "/producttriches"
-@rendermode InteractiveServer
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
-@using GlassStore.Entities.TriCH.Models
-@using GlassStore.Repositories.TriCH.DBContext
-@* @implements IAsyncDisposable
-@inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory *@
-@inject GlassStore.Services.TriCH.IProductTriCHService _productService;
-
-<PageTitle>Index</PageTitle>
-
-<h1>Index</h1>
-
-<p>
-    <a href="producttriches/create">Create New</a>
-</p>
-
-@page "/producttriches"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using GlassStore.Entities.TriCH.Models
@@ -32,24 +14,12 @@
     <a href="producttriches/create" class="btn btn-primary">Create New</a>
 </p>
 
-@* Chỉ hiện thông báo Loading nhỏ phía trên nếu đang load lại, không chặn render Grid *@
 @if (isLoading)
 {
     <div class="alert alert-info py-1">Updating data...</div>
 }
 
 <QuickGrid Class="table table-striped" ItemsProvider="productProvider" Pagination="pagination">
-    <TemplateColumn Context="producttrich" Title="Images">
-        @if (producttrich.ProductImageTriChes != null && producttrich.ProductImageTriChes.Any())
-        {
-            var primaryImage = producttrich.ProductImageTriChes.FirstOrDefault(i => i.IsPrimary == true) ?? producttrich.ProductImageTriChes.First();
-            <img src="@primaryImage.ImageUrl" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;" />
-        }
-        else
-        {
-            <span class="text-muted">No Image</span>
-        }
-    </TemplateColumn>
     <PropertyColumn Property="producttrich => producttrich.ProductName" Title="Name" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Sku" Title="SKU" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Brand" Sortable="true" />
@@ -58,12 +28,6 @@
     
     <TemplateColumn Context="producttrich" Title="Actions">
         <div class="btn-group">
-            <a class="btn btn-sm btn-info text-white" href="@($"productcolortriches?productid={producttrich.ProductTriChid}")">
-                <i class="bi bi-palette"></i> Màu
-            </a>
-            <a class="btn btn-sm btn-secondary" href="@($"productimagetriches?productid={producttrich.ProductTriChid}")">
-                <i class="bi bi-image"></i> Ảnh
-            </a>
             <a class="btn btn-sm btn-outline-info" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">
                 <i class="bi bi-eye"></i>
             </a>
@@ -82,7 +46,7 @@
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     GridItemsProvider<ProductTriCh> productProvider = default!;
-    bool isLoading = false; // Mặc định là false để QuickGrid được render ngay
+    bool isLoading = false; 
 
     protected override void OnInitialized()
     {
@@ -94,7 +58,7 @@
             int pageSize = request.Count ?? pagination.ItemsPerPage;
             int pageIndex = request.StartIndex / pageSize; 
 
-            var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex + 1, pageSize);
+            var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex, pageSize);
 
             isLoading = false;
             StateHasChanged();
@@ -105,5 +69,3 @@
         };
     }
 }
-
-
