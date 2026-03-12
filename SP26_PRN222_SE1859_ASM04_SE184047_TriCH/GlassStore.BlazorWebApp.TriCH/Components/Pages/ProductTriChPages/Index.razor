@@ -11,7 +11,7 @@
 <h1>Product Management</h1>
 
 <p>
-    <a href="producttriches/create" class="btn btn-primary">Create New</a>
+    <a href="producttriches/create" class="btn btn-success">Create New</a>
 </p>
 
 @if (isLoading)
@@ -27,16 +27,10 @@
     <PropertyColumn Property="producttrich => producttrich.StockQuantity" Title="Stock" Sortable="true" />
     
     <TemplateColumn Context="producttrich" Title="Actions">
-        <div class="btn-group">
-            <a class="btn btn-sm btn-outline-info" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">
-                <i class="bi bi-eye"></i>
-            </a>
-            <a class="btn btn-sm btn-outline-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">
-                <i class="bi bi-pencil"></i>
-            </a>
-            <a class="btn btn-sm btn-outline-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">
-                <i class="bi bi-trash"></i>
-            </a>
+        <div class="d-flex gap-1">
+            <a class="btn btn-sm btn-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a>
+            <a class="btn btn-sm btn-info text-white" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a>
+            <a class="btn btn-sm btn-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
         </div>
     </TemplateColumn>
 </QuickGrid>

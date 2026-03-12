@@ -90,13 +90,12 @@
                 <InputDate id="updatedat" @bind-Value="ProductTriCh.UpdatedAt" class="form-control" /> 
                 <ValidationMessage For="() => ProductTriCh.UpdatedAt" class="text-danger" /> 
             </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+            <div class="mt-4 d-flex gap-1">
+                <button type="submit" class="btn btn-primary">Create</button>
+                <a href="/producttriches" class="btn btn-secondary">Back to List</a>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/producttriches">Back to List</a>
 </div>
 
 @code {

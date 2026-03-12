@@ -56,12 +56,8 @@
                     <form asp-action="Delete">
                         <input type="hidden" asp-for="ProductTriChid" />
                         <div class="d-flex justify-content-between mt-4">
-                            <a asp-action="Manage" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Quay lại danh sách
-                            </a>
-                            <button type="submit" class="btn btn-danger btn-lg px-4">
-                                <i class="bi bi-trash"></i> Xác nhận xóa vĩnh viễn
-                            </button>
+                            <a asp-action="Manage" class="btn btn-secondary">Back to List</a>
+                            <button type="submit" class="btn btn-danger">Delete</button>
                         </div>
                     </form>
                 </div>
