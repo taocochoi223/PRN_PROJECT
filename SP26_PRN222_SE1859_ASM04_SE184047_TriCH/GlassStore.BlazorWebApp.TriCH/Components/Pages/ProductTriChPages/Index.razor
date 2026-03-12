@@ -1,4 +1,4 @@
-﻿@page "/producttriches"
+@page "/producttriches"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -16,64 +16,74 @@
     <a href="producttriches/create">Create New</a>
 </p>
 
+@page "/producttriches"
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using GlassStore.Entities.TriCH.Models
+@using GlassStore.Repositories.TriCH.DBContext
+@inject GlassStore.Services.TriCH.IProductTriCHService _productService;
+
+<PageTitle>Product Management</PageTitle>
+
+<h1>Product Management</h1>
+
+<p>
+    <a href="producttriches/create" class="btn btn-primary">Create New</a>
+</p>
+
+@* Chỉ hiện thông báo Loading nhỏ phía trên nếu đang load lại, không chặn render Grid *@
 @if (isLoading)
 {
-    <p>Loading products…</p>
+    <div class="alert alert-info py-1">Updating data...</div>
 }
-else
-{
-    <QuickGrid Class="table" ItemsProvider="productProvider" Pagination="pagination">
-        <TemplateColumn Context="producttrich" Title="Images">
-            @if (producttrich.ProductImageTriChes != null && producttrich.ProductImageTriChes.Any())
-            {
-                var primaryImage = producttrich.ProductImageTriChes.FirstOrDefault(i => i.IsPrimary == true) ?? producttrich.ProductImageTriChes.First();
-                <img src="@primaryImage.ImageUrl" alt="Product Image" style="width: 50px; height: 50px;" />
-            }
-        </TemplateColumn>
-        <PropertyColumn Property="producttrich => producttrich.ProductName" />
-        <PropertyColumn Property="producttrich => producttrich.Sku" />
-        <PropertyColumn Property="producttrich => producttrich.CategoryTriChid" />
-        <PropertyColumn Property="producttrich => producttrich.Brand" />
-        <PropertyColumn Property="producttrich => producttrich.Price" />
-        <PropertyColumn Property="producttrich => producttrich.Description" />
-        <PropertyColumn Property="producttrich => producttrich.FrameType" />
-        <PropertyColumn Property="producttrich => producttrich.Material" />
-        <PropertyColumn Property="producttrich => producttrich.Dimensions" />
-        <PropertyColumn Property="producttrich => producttrich.StockQuantity" />
-        <PropertyColumn Property="producttrich => producttrich.Status" />
-        <PropertyColumn Property="producttrich => producttrich.CreatedAt" />
-        <PropertyColumn Property="producttrich => producttrich.UpdatedAt" />
 
-        <TemplateColumn Context="producttrich">
-            <a href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a> |
-            <a href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a> |
-            <a href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
-        </TemplateColumn>
-    </QuickGrid>
-}
-@attribute [StreamRendering]
+<QuickGrid Class="table table-striped" ItemsProvider="productProvider" Pagination="pagination">
+    <TemplateColumn Context="producttrich" Title="Images">
+        @if (producttrich.ProductImageTriChes != null && producttrich.ProductImageTriChes.Any())
+        {
+            var primaryImage = producttrich.ProductImageTriChes.FirstOrDefault(i => i.IsPrimary == true) ?? producttrich.ProductImageTriChes.First();
+            <img src="@primaryImage.ImageUrl" alt="Product Image" style="width: 50px; height: 50px; object-fit: cover;" />
+        }
+        else
+        {
+            <span class="text-muted">No Image</span>
+        }
+    </TemplateColumn>
+    <PropertyColumn Property="producttrich => producttrich.ProductName" Title="Name" Sortable="true" />
+    <PropertyColumn Property="producttrich => producttrich.Sku" Title="SKU" Sortable="true" />
+    <PropertyColumn Property="producttrich => producttrich.Brand" Sortable="true" />
+    <PropertyColumn Property="producttrich => producttrich.Price" Format="C0" Sortable="true" />
+    <PropertyColumn Property="producttrich => producttrich.StockQuantity" Title="Stock" Sortable="true" />
+    
+    <TemplateColumn Context="producttrich" Title="Actions">
+        <div class="btn-group">
+            <a class="btn btn-sm btn-outline-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a>
+            <a class="btn btn-sm btn-outline-info" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a>
+            <a class="btn btn-sm btn-outline-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
+        </div>
+    </TemplateColumn>
+</QuickGrid>
+
+<Paginator State="@pagination" />
 
 @code {
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-
     GridItemsProvider<ProductTriCh> productProvider = default!;
-
-    // loading flag used to show a spinner/message while the data is being fetched
-    bool isLoading = true;
+    bool isLoading = false; // Mặc định là false để QuickGrid được render ngay
 
     protected override void OnInitialized()
     {
         productProvider = async request =>
         {
-            // mark loading before every request (could be refined to only first load)
             isLoading = true;
+            StateHasChanged();
 
-            int pageSize = request.Count ?? 10;
-            int pageIndex = (request.StartIndex) / pageSize;
+            int pageSize = request.Count ?? pagination.ItemsPerPage;
+            int pageIndex = request.StartIndex / pageSize; 
 
-            var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex, pageSize);
+            var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex + 1, pageSize);
 
-            // finished loading, make sure UI updates
             isLoading = false;
             StateHasChanged();
 
@@ -83,4 +93,5 @@ else
         };
     }
 }
+
 

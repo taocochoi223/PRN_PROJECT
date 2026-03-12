@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh.CreateModel
 
 @{
@@ -15,12 +15,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CategoryTriCh.CategoryName" class="control-label"></label>
-                <input asp-for="CategoryTriCh.CategoryName" class="form-control" />
+                <input asp-for="CategoryTriCh.CategoryName" id="category-name" class="form-control" />
                 <span asp-validation-for="CategoryTriCh.CategoryName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CategoryTriCh.Slug" class="control-label"></label>
-                <input asp-for="CategoryTriCh.Slug" class="form-control" />
+                <input asp-for="CategoryTriCh.Slug" id="category-slug" class="form-control" />
                 <span asp-validation-for="CategoryTriCh.Slug" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -29,15 +29,36 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-page="./Manage" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function generateSlug(text) {
+            return text.toString().toLowerCase()
+                .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ặ|ẵ|â|ấ|ầ|ẩ|ậ|ẫ/g, 'a')
+                .replace(/é|è|ẻ|ẹ|ẽ|ê|ế|ề|ể|ệ|ễ/g, 'e')
+                .replace(/i|í|ì|ỉ|ị|ĩ/g, 'i')
+                .replace(/ó|ò|ỏ|ọ|õ|ô|ố|ồ|ổ|ộ|ỗ|ơ|ớ|ờ|ở|ợ|ỡ/g, 'o')
+                .replace(/ú|ù|ủ|ụ|ũ|ư|ứ|ừ|ử|ự|ữ/g, 'u')
+                .replace(/ý|ỳ|ỷ|ỵ|ỹ/g, 'y')
+                .replace(/đ/g, 'd')
+                .replace(/\s+/g, '-')           // Thay khoảng trắng bằng -
+                .replace(/[^\w\-]+/g, '')       // Loại bỏ ký tự đặc biệt
+                .replace(/\-\-+/g, '-')         // Thay nhiều - bằng một -
+                .replace(/^-+/, '')             // Loại bỏ - ở đầu
+                .replace(/-+$/, '');            // Loại bỏ - ở cuối
+        }
+
+        document.getElementById('category-name').addEventListener('input', function() {
+            var name = this.value;
+            var slug = generateSlug(name);
+            document.getElementById('category-slug').value = slug;
+        });
+    </script>
 }

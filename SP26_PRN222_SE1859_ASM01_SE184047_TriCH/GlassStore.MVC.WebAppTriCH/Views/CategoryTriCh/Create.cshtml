@@ -18,13 +18,13 @@
                         
                         <div class="mb-3">
                             <label asp-for="CategoryName" class="form-label">Tên danh mục</label>
-                            <input asp-for="CategoryName" class="form-control" />
+                            <input asp-for="CategoryName" class="form-control" id="category-name" />
                             <span asp-validation-for="CategoryName" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label asp-for="Slug" class="form-label">Slug (URL)</label>
-                            <input asp-for="Slug" class="form-control" />
+                            <input asp-for="Slug" class="form-control" id="category-slug" readonly />
                             <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
 
@@ -50,4 +50,27 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        function generateSlug(text) {
+            return text.toString().toLowerCase()
+                .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ặ|ẵ|â|ấ|ầ|ẩ|ậ|ẫ/g, 'a')
+                .replace(/é|è|ẻ|ẹ|ẽ|ê|ế|ề|ể|ệ|ễ/g, 'e')
+                .replace(/i|í|ì|ỉ|ị|ĩ/g, 'i')
+                .replace(/ó|ò|ỏ|ọ|õ|ô|ố|ồ|ổ|ộ|ỗ|ơ|ớ|ờ|ở|ợ|ỡ/g, 'o')
+                .replace(/ú|ù|ủ|ụ|ũ|ư|ứ|ừ|ử|ự|ữ/g, 'u')
+                .replace(/ý|ỳ|ỷ|ỵ|ỹ/g, 'y')
+                .replace(/đ/g, 'd')
+                .replace(/\s+/g, '-')           // Thay khoảng trắng bằng -
+                .replace(/[^\w\-]+/g, '')       // Loại bỏ ký tự đặc biệt
+                .replace(/\-\-+/g, '-')         // Thay nhiều - bằng một -
+                .replace(/^-+/, '')             // Loại bỏ - ở đầu
+                .replace(/-+$/, '');            // Loại bỏ - ở cuối
+        }
+
+        document.getElementById('category-name').addEventListener('input', function() {
+            var name = this.value;
+            var slug = generateSlug(name);
+            document.getElementById('category-slug').value = slug;
+        });
+    </script>
 }

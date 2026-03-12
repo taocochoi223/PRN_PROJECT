@@ -1,4 +1,4 @@
-﻿@page "/producttriches/edit"
+@page "/producttriches/edit"
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject IDbContextFactory<GlassStore.Repositories.TriCH.DBContext.PRN222_EYEWEARSHOPContext> DbFactory
@@ -54,7 +54,17 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="frametype" class="form-label">FrameType:</label>
-                    <InputText id="frametype" @bind-Value="ProductTriCh.FrameType" class="form-control" />
+                    <InputSelect id="frametype" @bind-Value="ProductTriCh.FrameType" class="form-control">
+                        <option value="">-- Select Frame Type --</option>
+                        <option value="Full Rim">Full Rim (Nguyên khung)</option>
+                        <option value="Half Rim">Half Rim (Nửa khung)</option>
+                        <option value="Rimless">Rimless (Không khung)</option>
+                        <option value="Browline">Browline</option>
+                        <option value="Aviator">Aviator</option>
+                        <option value="Wayfarer">Wayfarer</option>
+                        <option value="Round">Round (Tròn)</option>
+                        <option value="Square">Square (Vuông)</option>
+                    </InputSelect>
                     <ValidationMessage For="() => ProductTriCh.FrameType" class="text-danger" />
                 </div>
                 <div class="mb-3">

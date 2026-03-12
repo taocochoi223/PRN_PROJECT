@@ -1,4 +1,4 @@
-﻿using GlassStore.Entities.TriCH.Models;
+using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH.Basic;
 using GlassStore.Repositories.TriCH.DBContext;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +33,7 @@ namespace GlassStore.Repositories.TriCH
 
             var items = await query
                 .OrderByDescending(p => p.CreatedAt)
-                .Skip(pageSize * pageIndex)
+                .Skip(pageSize * (pageIndex - 1))
                 .Take(pageSize)
                 .ToListAsync();
 

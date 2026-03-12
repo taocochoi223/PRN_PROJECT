@@ -61,8 +61,9 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a asp-action="Edit" asp-route-id="@item.CategoryTriChid" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                        <a asp-action="Delete" asp-route-id="@item.CategoryTriChid" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></a>
+                                        <a asp-action="Details" asp-route-id="@item.CategoryTriChid" class="btn btn-sm btn-outline-info" title="Xem chi tiết"><i class="bi bi-eye"></i></a>
+                                        <a asp-action="Edit" asp-route-id="@item.CategoryTriChid" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa"><i class="bi bi-pencil"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@item.CategoryTriChid" class="btn btn-sm btn-outline-danger" title="Xóa"><i class="bi bi-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>

@@ -9,7 +9,7 @@
     <div>
         <h1>Manage Products</h1>
         <p>
-            <a asp-page="Create" class="btn btn-success">Create New</a>
+            <a asp-page="./Create" class="btn btn-success">Create New</a>
         </p>
     </div>
     <form method="get" class="d-flex">
@@ -21,46 +21,46 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].ProductImageTriChes)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.ProductImageTriChes)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].ProductName)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.ProductName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Sku)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Sku)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Brand)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Brand)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Price)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Description)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].FrameType)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.FrameType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Material)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Material)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Dimensions)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Dimensions)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].StockQuantity)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.StockQuantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].Status)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].CreatedAt)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.CreatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].UpdatedAt)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.UpdatedAt)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductTriCh[0].CategoryTriCh)
+                @Html.DisplayNameFor(model => model.ProductTriCh.FirstOrDefault()!.CategoryTriCh)
             </th>
             <th></th>
         </tr>
@@ -118,10 +118,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CategoryTriCh.CategoryName)
                 </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.ProductTriChid">Edit</a>
-                    <a asp-page="./Details" asp-route-id="@item.ProductTriChid">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@item.ProductTriChid">Delete</a>
+                <td class="d-flex gap-2">
+                    <a asp-page="./Edit" asp-route-id="@item.ProductTriChid" class="btn btn-primary btn-sm">Edit</a>
+                    <a asp-page="./Details" asp-route-id="@item.ProductTriChid" class="btn btn-info btn-sm">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@item.ProductTriChid" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }

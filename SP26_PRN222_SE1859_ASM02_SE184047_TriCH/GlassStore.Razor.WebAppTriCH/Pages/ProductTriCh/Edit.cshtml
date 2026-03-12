@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh.EditModel
 
 @{
@@ -46,7 +46,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductTriCh.FrameType" class="control-label"></label>
-                <input asp-for="ProductTriCh.FrameType" class="form-control" />
+                <select asp-for="ProductTriCh.FrameType" class="form-control">
+                    <option value="">-- Select Frame Type --</option>
+                    <option value="Full Rim">Full Rim (Nguyên khung)</option>
+                    <option value="Half Rim">Half Rim (Nửa khung)</option>
+                    <option value="Rimless">Rimless (Không khung)</option>
+                    <option value="Browline">Browline</option>
+                    <option value="Aviator">Aviator</option>
+                    <option value="Wayfarer">Wayfarer</option>
+                    <option value="Round">Round (Tròn)</option>
+                    <option value="Square">Square (Vuông)</option>
+                </select>
                 <span asp-validation-for="ProductTriCh.FrameType" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -81,14 +91,12 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-page="./Manage" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

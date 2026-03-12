@@ -58,7 +58,17 @@
                             </div>
                              <div class="col-md-4">
                                 <label asp-for="FrameType" class="form-label">Loại gọng</label>
-                                <input asp-for="FrameType" class="form-control" />
+                                <select asp-for="FrameType" class="form-select">
+                                    <option value="">-- Chọn loại gọng --</option>
+                                    <option value="Full Rim">Full Rim (Nguyên khung)</option>
+                                    <option value="Half Rim">Half Rim (Nửa khung)</option>
+                                    <option value="Rimless">Rimless (Không khung)</option>
+                                    <option value="Browline">Browline</option>
+                                    <option value="Aviator">Aviator</option>
+                                    <option value="Wayfarer">Wayfarer</option>
+                                    <option value="Round">Round (Tròn)</option>
+                                    <option value="Square">Square (Vuông)</option>
+                                </select>
                                 <span asp-validation-for="FrameType" class="text-danger"></span>
                             </div>
                             

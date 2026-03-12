@@ -82,6 +82,7 @@
                                            class="btn btn-sm btn-secondary" title="Quản lý hình ảnh">
                                             <i class="bi bi-images"></i> Ảnh
                                         </a>
+                                        <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-info" title="Xem chi tiết"><i class="bi bi-eye"></i></a>
                                         <a asp-action="Edit" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                                         <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.ProductTriChid">
                                             <i class="bi bi-trash"></i>
