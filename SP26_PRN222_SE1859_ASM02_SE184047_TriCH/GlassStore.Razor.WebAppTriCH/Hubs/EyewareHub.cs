@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using GlassStore.Entities.TriCH.Models;
 using GlassStore.Services.TriCH;
 
@@ -8,19 +8,15 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
     {
         private readonly IProductTriCHService _productService;
         private readonly ICategoryTriCHService _categoryService;
-        private readonly IProductColorTriCHService _colorService;
-        private readonly IProductImageTriCHService _imageService;
+
 
         public EyewareHub(
             IProductTriCHService productService,
-            ICategoryTriCHService categoryService,
-            IProductColorTriCHService colorService,
-            IProductImageTriCHService imageService)
+            ICategoryTriCHService categoryService)
         {
             _productService = productService;
             _categoryService = categoryService;
-            _colorService = colorService;
-            _imageService = imageService;
+
         }
         public async Task SendMessage(string user, string message)
         {
@@ -100,60 +96,6 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
         }
         #endregion
 
-        #region ProductColorTriCh Hubs
-        public async Task HubDelete_colorTriCh(int _id)
-        {
-            await _colorService.DeleteColorAsync(_id);
-            await Clients.All.SendAsync("ReceiveHubDelete_colorTriCh", _id);
-        }
 
-        public async Task HubCreate_colorTriCh(ProductColorTriCh item)
-        {
-            await _colorService.AddColorAsync(item);
-            var newItem = await _colorService.GetColorByIdAsync(item.ColorTriChid);
-            if (newItem != null)
-            {
-                var broadcastData = new
-                {
-                    colorTriChid = newItem.ColorTriChid,
-                    productTriChid = newItem.ProductTriChid,
-                    colorName = newItem.ColorName,
-                    colorCode = newItem.ColorCode,
-                    stockQuantity = newItem.StockQuantity,
-                    productName = newItem.ProductTriCh != null ? newItem.ProductTriCh.ProductName : null
-                };
-                await Clients.All.SendAsync("ReceiveHubCreate_colorTriCh", broadcastData);
-            }
-        }
-        #endregion
-
-        #region ProductImageTriCh Hubs
-        public async Task HubDelete_imageTriCh(int _id)
-        {
-            await _imageService.DeleteImageAsync(_id);
-            await Clients.All.SendAsync("ReceiveHubDelete_imageTriCh", _id);
-        }
-
-        public async Task HubCreate_imageTriCh(ProductImageTriCh item)
-        {
-            await _imageService.AddImageAsync(item);
-            var newItem = await _imageService.GetImageByIdAsync(item.ImageTriChid);
-            if (newItem != null)
-            {
-                var broadcastData = new
-                {
-                    imageTriChid = newItem.ImageTriChid,
-                    productTriChid = newItem.ProductTriChid,
-                    imageUrl = newItem.ImageUrl,
-                    isPrimary = newItem.IsPrimary,
-                    displayOrder = newItem.DisplayOrder,
-                    colorTriChid = newItem.ColorTriChid,
-                    productName = newItem.ProductTriCh != null ? newItem.ProductTriCh.ProductName : null,
-                    colorName = newItem.ColorTriCh != null ? newItem.ColorTriCh.ColorName : null
-                };
-                await Clients.All.SendAsync("ReceiveHubCreate_imageTriCh", broadcastData);
-            }
-        }
-        #endregion
     }
 }

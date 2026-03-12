@@ -27,15 +27,13 @@ builder.Services.AddDbContext<PRN222_EYEWEARSHOPContext>(options =>
 // Register Repositories
 builder.Services.AddScoped<ProductTriCHRepository>();
 builder.Services.AddScoped<CategoryTriCHRepository>();
-builder.Services.AddScoped<ProductColorTriCHRepository>();
-builder.Services.AddScoped<ProductImageTriCHRepository>();
+
 builder.Services.AddScoped<UserAccountRepository>();
 
 // Register Services
 builder.Services.AddScoped<IProductTriCHService, ProductTriCHService>();
 builder.Services.AddScoped<ICategoryTriCHService, CategoryTriCHService>();
-builder.Services.AddScoped<IProductColorTriCHService, ProductColorTriCHService>();
-builder.Services.AddScoped<IProductImageTriCHService, ProductImageTriCHService>();
+
 builder.Services.AddScoped<UserAccoutService>();
 
 var app = builder.Build();
