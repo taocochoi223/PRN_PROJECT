@@ -1,8 +1,11 @@
-﻿@model IEnumerable<GlassStore.Entities.TriCH.Models.ProductTriCh>
+@model IEnumerable<GlassStore.Entities.TriCH.Models.ProductTriCh>
 
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
     Layout = "_LayoutAdmin";
+    int currentPage = (int)(ViewData["CurrentPage"] ?? 1);
+    int totalPages  = (int)(ViewData["TotalPages"] ?? 1);
+    string? search  = ViewData["Search"] as string;
 }
 
 <div class="container my-5">
@@ -10,6 +13,22 @@
         <h1>Quản lý Sản phẩm</h1>
         <a asp-action="Create" class="btn btn-success"><i class="bi bi-plus-lg"></i> Thêm mới</a>
     </div>
+
+    @* ----- Thanh tìm kiếm ----- *@
+    <form method="get" asp-action="Manage" class="mb-3">
+        <div class="input-group" style="max-width: 400px;">
+            <input type="text" name="search" value="@search"
+                   class="form-control"
+                   placeholder="Tìm tên sản phẩm..." />
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-search"></i> Tìm
+            </button>
+            @if (!string.IsNullOrEmpty(search))
+            {
+                <a asp-action="Manage" class="btn btn-outline-secondary">✕ Xóa</a>
+            }
+        </div>
+    </form>
 
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
@@ -97,4 +116,35 @@
             </div>
         </div>
     </div>
+
+    @* ----- Phân trang động ----- *@
+    @if (totalPages > 1)
+    {
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+
+                @* Nút Previous *@
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action("Manage", new { page = currentPage - 1, search })">‹ Trước</a>
+                </li>
+
+                @* Các số trang *@
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link"
+                           href="@Url.Action("Manage", new { page = i, search })">@i</a>
+                    </li>
+                }
+
+                @* Nút Next *@
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       href="@Url.Action("Manage", new { page = currentPage + 1, search })">Sau ›</a>
+                </li>
+
+            </ul>
+        </nav>
+    }
 </div>

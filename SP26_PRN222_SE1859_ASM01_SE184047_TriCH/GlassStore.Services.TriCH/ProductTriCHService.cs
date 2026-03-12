@@ -17,14 +17,15 @@ namespace GlassStore.Services.TriCH
             _repo = repo;
         }
 
+        public async Task<(List<ProductTriCh> Items, int TotalCount)> GetAllProductPagedAsync(int pageIndex, int pageSize, string? search = null)
+        {
+            return await _repo.GetAllProductAsync(pageIndex, pageSize, search);
+        }
+
+
         public async Task<bool> SkuExistsAsync(string sku)
         {
             return await _repo.SkuExistsAsync(sku);
-        }
-
-        public async Task<List<ProductTriCh>> GetAllProductAsync(string? search = null)
-        {
-            return await _repo.GetAllProductAsync(search);
         }
 
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)
@@ -47,7 +48,7 @@ namespace GlassStore.Services.TriCH
                     throw new InvalidOperationException("SKU đã tồn tại. Vui lòng nhập mã khác.");
                 }
             }
-            product.Status = 1;
+            product.Status = 1; 
             product.CreatedAt = DateTime.Now;
             await _repo.CreateAsync(product);
         }

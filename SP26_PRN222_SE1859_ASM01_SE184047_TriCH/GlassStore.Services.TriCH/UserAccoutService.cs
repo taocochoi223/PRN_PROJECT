@@ -7,7 +7,10 @@ namespace GlassStore.Services.TriCH
     {
         private readonly UserAccountRepository _userAccoutRepository;
 
-        public UserAccoutService() => _userAccoutRepository ??= new UserAccountRepository();
+        public UserAccoutService(UserAccountRepository userAccoutRepository)
+        {
+            _userAccoutRepository = userAccoutRepository;
+        }
 
         public async Task<UserAccount> GetUserAccountAsync(string UserName, string Password)
         {

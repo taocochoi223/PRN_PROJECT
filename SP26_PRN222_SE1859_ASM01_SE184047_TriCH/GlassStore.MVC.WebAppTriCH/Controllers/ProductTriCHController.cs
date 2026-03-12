@@ -1,4 +1,4 @@
-﻿using GlassStore.Entities.TriCH.Models;
+using GlassStore.Entities.TriCH.Models;
 using GlassStore.Services.TriCH;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,40 +19,66 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             _categoryService = categoryService;
         }
 
-        // --- Helper Methods ---
         private bool IsAdmin()
         {
             var roleId = User.FindFirst(ClaimTypes.Role)?.Value;
             return roleId == "1";
         }
 
-        // 1. TRANG CHỦ: Hiển thị danh sách sản phẩm (Cho khách hàng)
-        public async Task<IActionResult> Index(string search, int? categoryId)
+        public async Task<IActionResult> Index(string search, int? categoryId, int page = 1)
         {
+            int pageSize = 8; 
+            int pageIndex = page - 1;
+
             // Lấy danh mục cho Sidebar
             var allCategories = await _categoryService.GetAllActiveCategoriesAsync();
             ViewData["Categories"] = allCategories;
 
             List<ProductTriCh> products;
+            int totalCount;
 
             if (categoryId != null)
             {
-                // Lọc theo danh mục
                 products = await _productService.GetProductByCategoryIdAsync(categoryId.Value);
+                totalCount = products.Count;
+                products = products.Skip(pageIndex * pageSize).Take(pageSize).ToList();
                 var currentCat = allCategories.FirstOrDefault(c => c.CategoryTriChid == categoryId);
                 ViewData["PageTitle"] = currentCat?.CategoryName;
             }
             else
             {
-                // Tìm kiếm hoặc lấy tất cả
-                products = await _productService.GetAllProductAsync(search);
+                var result = await _productService.GetAllProductPagedAsync(pageIndex, pageSize, search);
+                products = result.Items;
+                totalCount = result.TotalCount;
                 ViewData["PageTitle"] = string.IsNullOrEmpty(search) ? "Tất cả sản phẩm" : $"Kết quả tìm kiếm: {search}";
             }
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)totalCount / pageSize);
+            ViewData["Search"] = search;
+            ViewData["CategoryId"] = categoryId;
 
             return View(products);
         }
 
-        // 2. CHI TIẾT: Xem thông tin 1 sản phẩm
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
+        public async Task<IActionResult> Manage(string search, int page = 1)
+        {
+            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+
+            int pageSize = 10; 
+            int pageIndex = page - 1;
+
+            var result = await _productService.GetAllProductPagedAsync(pageIndex, pageSize, search);
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)result.TotalCount / pageSize);
+            ViewData["Search"] = search;
+
+            return View(result.Items);
+        }
+
+
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetProductByIdAsync(id);
@@ -61,18 +87,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(product);
         }
 
-        // --- ADMIN ACTIONS (Quản lý sản phẩm) ---
-        // Truy cập qua /ProductTriCh/Manage
-
-        // --- ADMIN: Quản lý sản phẩm ---
-
-        [TypeFilter(typeof(Filters.AuthenticationFilter))]
-        public async Task<IActionResult> Manage()
-        {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
-            var products = await _productService.GetAllProductAsync();
-            return View(products);
-        }
 
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Create()
@@ -91,8 +105,16 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
             if (ModelState.IsValid)
             {
-                await _productService.AddProductAsync(product);
-                return RedirectToAction(nameof(Manage));
+                try
+                {
+                    await _productService.AddProductAsync(product);
+                    return RedirectToAction(nameof(Manage));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    // SKU trùng hoặc lỗi logic từ Service → hiện thông báo trên form
+                    ModelState.AddModelError("Sku", ex.Message);
+                }
             }
             await LoadCategoriesToViewBag(product.CategoryTriChid);
             return View(product);

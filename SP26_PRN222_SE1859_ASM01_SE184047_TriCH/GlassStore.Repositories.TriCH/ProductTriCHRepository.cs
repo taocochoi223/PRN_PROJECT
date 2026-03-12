@@ -18,7 +18,7 @@ namespace GlassStore.Repositories.TriCH
             _context = context;
         }
 
-        public async Task<List<ProductTriCh>> GetAllProductAsync(string search = null)
+        public async Task<(List<ProductTriCh> Items, int TotalCount)> GetAllProductAsync(int pageIndex, int pageSize, string search = null)
         {
             var query = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
@@ -29,8 +29,15 @@ namespace GlassStore.Repositories.TriCH
                 query = query.Where(p => p.ProductName.Contains(search));
             }
 
-            var products = await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
-            return products;
+            int total = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip(pageSize * pageIndex)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, total);
         }
 
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)

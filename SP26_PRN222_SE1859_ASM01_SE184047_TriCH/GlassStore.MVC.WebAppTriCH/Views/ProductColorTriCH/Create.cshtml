@@ -1,22 +1,83 @@
-﻿@model GlassStore.Entities.TriCH.Models.ProductColorTriCh
+@model GlassStore.Entities.TriCH.Models.ProductColorTriCh
 
-<h2>Thêm màu mới</h2>
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="ProductTriChid" value="@ViewBag.ProductId" />
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm màu mới";
+}
 
-    <div class="mb-3">
-        <label asp-for="ColorName" class="form-label">Tên màu</label>
-        <input asp-for="ColorName" class="form-control" />
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Thêm màu mới</h1>
+        <a asp-action="Index" asp-route-productId="@ViewBag.ProductId" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Quay lại
+        </a>
     </div>
-    <div class="mb-3">
-        <label asp-for="ColorCode" class="form-label">Mã màu (hex, vd: #FF0000)</label>
-        <input asp-for="ColorCode" class="form-control" type="color" />
+
+    <div class="card shadow-sm border-0" style="max-width: 500px;">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ProductTriChid" value="@ViewBag.ProductId" />
+
+                <div class="mb-3">
+                    <label asp-for="ColorName" class="form-label fw-bold">
+                        Tên màu <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="ColorName" class="form-control" placeholder="VD: Đỏ, Xanh lam..." required />
+                    <span asp-validation-for="ColorName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ColorCode" class="form-label fw-bold">
+                        Mã màu <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="ColorCode" class="form-control" type="color" required />
+                        <input type="text" id="colorCodeText" class="form-control"
+                               placeholder="#FF0000" maxlength="7"
+                               oninput="syncColor(this)" />
+                    </div>
+                    <span asp-validation-for="ColorCode" class="text-danger small"></span>
+                    <div class="form-text">Chọn màu hoặc nhập mã HEX</div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="StockQuantity" class="form-label fw-bold">Tồn kho</label>
+                    <input asp-for="StockQuantity" class="form-control" type="number" min="0" placeholder="0" />
+                    <span asp-validation-for="StockQuantity" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Lưu
+                    </button>
+                    <a asp-action="Index" asp-route-productId="@ViewBag.ProductId" class="btn btn-outline-secondary">Hủy</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="StockQuantity" class="form-label">Tồn kho</label>
-        <input asp-for="StockQuantity" class="form-control" type="number" />
-    </div>
-    <button type="submit" class="btn btn-primary">Lưu</button>
-    <a asp-action="Index" asp-route-productId="@ViewBag.ProductId" class="btn btn-secondary">Hủy</a>
-</form>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        // Sync color picker <-> text input
+        const colorPicker = document.getElementById('ColorCode');
+        const colorText   = document.getElementById('colorCodeText');
+
+        // Khi load trang, điền sẵn text từ color picker
+        colorText.value = colorPicker.value;
+
+        // Khi đổi color picker → cập nhật text
+        colorPicker.addEventListener('input', () => colorText.value = colorPicker.value);
+
+        // Khi nhập text → cập nhật color picker
+        function syncColor(input) {
+            const val = input.value;
+            if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+                colorPicker.value = val;
+            }
+        }
+    </script>
+}
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,12 +48,10 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
                 return NotFound();
             }
 
-            var categorytrich = await _context.CategoryTriChes.FindAsync(id);
+            var categorytrich = await _categoryService.GetCategoryByIdAsync(id.Value);
             if (categorytrich != null)
             {
-                CategoryTriCh = categorytrich;
-                _context.CategoryTriChes.Remove(CategoryTriCh);
-                await _context.SaveChangesAsync();
+                await _categoryService.DeleteCategoryAsync(id.Value);
             }
 
             return RedirectToPage("./Index");

@@ -1,4 +1,4 @@
-﻿using GlassStore.Entities.TriCH.Models;
+using GlassStore.Entities.TriCH.Models;
 using GlassStore.Services.TriCH;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,6 +48,13 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         public async Task<IActionResult> Create(ProductColorTriCh color)
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
+
+            // Validate thủ công vì Entity auto-generated không có [Required]
+            if (string.IsNullOrWhiteSpace(color.ColorName))
+                ModelState.AddModelError("ColorName", "Tên màu không được để trống.");
+            if (string.IsNullOrWhiteSpace(color.ColorCode))
+                ModelState.AddModelError("ColorCode", "Mã màu không được để trống.");
+
             if (ModelState.IsValid)
             {
                 await _colorService.AddColorAsync(color);

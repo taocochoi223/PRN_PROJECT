@@ -1,4 +1,4 @@
-﻿using GlassStore.Entities.TriCH.Models;
+using GlassStore.Entities.TriCH.Models;
 using GlassStore.Repositories.TriCH;
 using System;
 using System.Collections.Generic;
@@ -36,9 +36,17 @@ namespace GlassStore.Services.TriCH
             return await _repo.GetAllActiveCategoriesAsync();
         }
 
+        // Dùng cho dropdown (không phân trang) - lấy toàn bộ
         public async Task<List<CategoryTriCh>> GetAllCategoriesAsync()
         {
             return await _repo.GetAllCategoriesAsync();
+        }
+
+        // Dùng cho trang list có phân trang
+        public async Task<(List<CategoryTriCh> Items, int TotalCount)> GetAllCategoriesPagedAsync(
+            int pageIndex, int pageSize, string? search = null)
+        {
+            return await _repo.GetAllCategoriesPagedAsync(pageIndex, pageSize, search);
         }
 
         public async Task<CategoryTriCh?> GetCategoryByIdAsync(int categoryId)

@@ -17,12 +17,12 @@ namespace GlassStore.Services.TriCH
             _repo = repo;
         }
 
-        public async Task<List<ProductTriCh>> GetAllProductAsync(string? search = null)
+        public async Task<(List<ProductTriCh> Items, int TotalCount)> GetAllProductPagedAsync(int pageIndex, int pageSize, string? search = null)
         {
-            return await _repo.GetAllProductAsync(search);
+            return await _repo.GetAllProductAsync(pageIndex, pageSize, search);
         }
 
-        // utility used by pages to validate SKU before creation/update
+
         public async Task<bool> SkuExistsAsync(string sku)
         {
             return await _repo.SkuExistsAsync(sku);

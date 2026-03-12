@@ -17,14 +17,21 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             _service = service;
         }
 
-        // 1. DANH SÁCH: Hiển thị toàn bộ danh mục
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, int page = 1)
         {
-            var categories = await _service.GetAllCategoriesAsync();
-            return View(categories);
+            int pageSize = 5;
+            int pageIndex = page - 1;
+
+            var result = await _service.GetAllCategoriesPagedAsync(pageIndex, pageSize, search);
+
+            ViewData["CurrentPage"] = page;
+            ViewData["TotalPages"] = (int)Math.Ceiling((double)result.TotalCount / pageSize);
+            ViewData["Search"] = search;
+
+            return View(result.Items);
         }
 
-        // 2. CHI TIẾT: Xem thông tin 1 danh mục
+
         public async Task<IActionResult> Details(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
@@ -33,7 +40,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        // 3. TẠO MỚI: Mở trang tạo
         public IActionResult Create()
         {
             return View();
@@ -51,7 +57,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        // 4. CHỈNH SỬA: Mở trang sửa
         public async Task<IActionResult> Edit(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);
@@ -74,7 +79,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        // 5. XÓA: Xác nhận và thực hiện xóa
         public async Task<IActionResult> Delete(int id)
         {
             var category = await _service.GetCategoryByIdAsync(id);

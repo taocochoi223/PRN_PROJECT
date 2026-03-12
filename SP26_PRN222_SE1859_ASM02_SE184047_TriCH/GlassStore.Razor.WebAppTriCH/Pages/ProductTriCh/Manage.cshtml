@@ -1,15 +1,22 @@
-﻿@page
+@page
 @model GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh.ManageModel
 
 @{
     ViewData["Title"] = "Manage Products";
 }
 
-<h1>Manage Products</h1>
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h1>Manage Products</h1>
+        <p>
+            <a asp-page="Create" class="btn btn-success">Create New</a>
+        </p>
+    </div>
+    <form method="get" class="d-flex">
+        <input type="text" name="SearchToken" value="@Model.SearchToken" class="form-control me-2" placeholder="Search products..." />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -120,6 +127,26 @@
         }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(Model.PageIndex <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-page="./Manage" asp-route-PageIndex="@(Model.PageIndex - 1)" asp-route-SearchToken="@Model.SearchToken">Previous</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" asp-page="./Manage" asp-route-PageIndex="@i" asp-route-SearchToken="@Model.SearchToken">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.PageIndex >= Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-page="./Manage" asp-route-PageIndex="@(Model.PageIndex + 1)" asp-route-SearchToken="@Model.SearchToken">Next</a>
+            </li>
+        </ul>
+    </nav>
+}
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script>
