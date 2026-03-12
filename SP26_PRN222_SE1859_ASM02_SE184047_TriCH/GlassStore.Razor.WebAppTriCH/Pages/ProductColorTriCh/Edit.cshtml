@@ -1,0 +1,50 @@
+﻿@page
+@model GlassStore.Razor.WebAppTriCH.Pages.ProductColorTriCh.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ProductColorTriCh</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductColorTriCh.ColorTriChid" />
+            <div class="form-group">
+                <label asp-for="ProductColorTriCh.ProductTriChid" class="control-label"></label>
+                <select asp-for="ProductColorTriCh.ProductTriChid" class="form-control" asp-items="ViewBag.ProductTriChid" ></select>
+                <span asp-validation-for="ProductColorTriCh.ProductTriChid" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductColorTriCh.ColorName" class="control-label"></label>
+                <input asp-for="ProductColorTriCh.ColorName" class="form-control" />
+                <span asp-validation-for="ProductColorTriCh.ColorName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductColorTriCh.ColorCode" class="control-label"></label>
+                <input asp-for="ProductColorTriCh.ColorCode" class="form-control" />
+                <span asp-validation-for="ProductColorTriCh.ColorCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductColorTriCh.StockQuantity" class="control-label"></label>
+                <input asp-for="ProductColorTriCh.StockQuantity" class="form-control" />
+                <span asp-validation-for="ProductColorTriCh.StockQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

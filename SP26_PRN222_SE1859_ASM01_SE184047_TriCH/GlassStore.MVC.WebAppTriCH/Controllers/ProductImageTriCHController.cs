@@ -105,6 +105,14 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         }
 
         // 4. XÓA ẢNH
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            var image = await _imageService.GetImageByIdAsync(id);
+            if (image == null) return NotFound();
+            return View(image);
+        }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int productId)

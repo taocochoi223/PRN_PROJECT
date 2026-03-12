@@ -58,9 +58,21 @@
     
     <TemplateColumn Context="producttrich" Title="Actions">
         <div class="btn-group">
-            <a class="btn btn-sm btn-outline-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a>
-            <a class="btn btn-sm btn-outline-info" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a>
-            <a class="btn btn-sm btn-outline-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
+            <a class="btn btn-sm btn-info text-white" href="@($"productcolortriches?productid={producttrich.ProductTriChid}")">
+                <i class="bi bi-palette"></i> Màu
+            </a>
+            <a class="btn btn-sm btn-secondary" href="@($"productimagetriches?productid={producttrich.ProductTriChid}")">
+                <i class="bi bi-image"></i> Ảnh
+            </a>
+            <a class="btn btn-sm btn-outline-info" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">
+                <i class="bi bi-eye"></i>
+            </a>
+            <a class="btn btn-sm btn-outline-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">
+                <i class="bi bi-pencil"></i>
+            </a>
+            <a class="btn btn-sm btn-outline-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">
+                <i class="bi bi-trash"></i>
+            </a>
         </div>
     </TemplateColumn>
 </QuickGrid>

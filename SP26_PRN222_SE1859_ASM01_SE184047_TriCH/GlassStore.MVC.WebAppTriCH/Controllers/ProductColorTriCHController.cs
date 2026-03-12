@@ -88,6 +88,14 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         }
 
         // 4. XÓA MÀU
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            var color = await _colorService.GetColorByIdAsync(id);
+            if (color == null) return NotFound();
+            return View(color);
+        }
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id, int productId)

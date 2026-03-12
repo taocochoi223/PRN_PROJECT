@@ -104,7 +104,7 @@
                     @Html.DisplayFor(modelItem => item.Dimensions)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.StockQuantity)
+                    @(item.ProductColorTriChes?.Sum(c => c.StockQuantity ?? 0) ?? 0)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
@@ -118,10 +118,24 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CategoryTriCh.CategoryName)
                 </td>
-                <td class="d-flex gap-2">
-                    <a asp-page="./Edit" asp-route-id="@item.ProductTriChid" class="btn btn-primary btn-sm">Edit</a>
-                    <a asp-page="./Details" asp-route-id="@item.ProductTriChid" class="btn btn-info btn-sm">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@item.ProductTriChid" class="btn btn-danger btn-sm">Delete</a>
+                <td>
+                    <div class="btn-group gap-1">
+                        <a asp-page="/ProductColorTriCh/Index" asp-route-productId="@item.ProductTriChid" class="btn btn-sm btn-info text-white">
+                            <i class="bi bi-palette"></i> Màu
+                        </a>
+                        <a asp-page="/ProductImageTriCh/Index" asp-route-productId="@item.ProductTriChid" class="btn btn-sm btn-secondary" title="Quản lý hình ảnh">
+                            <i class="bi bi-image"></i> Ảnh
+                        </a>
+                        <a asp-page="./Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-info text-white" title="Xem chi tiết">
+                            <i class="bi bi-eye"></i> Chi tiết
+                        </a>
+                        <a asp-page="./Edit" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-primary" title="Chỉnh sửa">
+                            <i class="bi bi-pencil"></i> Sửa
+                        </a>
+                        <a asp-page="./Delete" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-danger" title="Xóa">
+                            <i class="bi bi-trash"></i> Xóa
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
@@ -194,9 +208,13 @@
                     <td>${updatedAt}</td>
                     <td>${categoryName}</td>
                     <td>
-                        <a href="./Edit?id=${item.productTriChid}">Edit</a> |
-                        <a href="./Details?id=${item.productTriChid}">Details</a> |
-                        <a href="#" onclick="deleteItem(${item.productTriChid}); return false;">Delete</a>
+                        <div class="btn-group gap-1">
+                            <a href="/ProductColorTriCh/Index?productId=${item.productTriChid}" class="btn btn-sm btn-info text-white"><i class="bi bi-palette"></i> Màu</a>
+                            <a href="/ProductImageTriCh/Index?productId=${item.productTriChid}" class="btn btn-sm btn-secondary"><i class="bi bi-image"></i> Ảnh</a>
+                            <a href="./Details?id=${item.productTriChid}" class="btn btn-sm btn-info text-white"><i class="bi bi-eye"></i> Chi tiết</a>
+                            <a href="./Edit?id=${item.productTriChid}" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i> Sửa</a>
+                            <a href="./Delete?id=${item.productTriChid}" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Xóa</a>
+                        </div>
                     </td>
                 `;
                 tbody.prepend(row); //chèn hàng mới vào đầu bảng

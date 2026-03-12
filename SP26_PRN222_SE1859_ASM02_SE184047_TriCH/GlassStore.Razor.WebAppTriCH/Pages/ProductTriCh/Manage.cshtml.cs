@@ -27,7 +27,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 
         public async Task OnGetAsync()
         {
-            var result = await _productService.GetAllProductPagedAsync(PageIndex, PageSize, SearchToken);
+            var result = await _productService.GetAllProductPagedAsync(PageIndex - 1, PageSize, SearchToken);
             ProductTriCh = result.Items;
             TotalPages = (int)Math.Ceiling(result.TotalCount / (double)PageSize);
         }

@@ -1,0 +1,78 @@
+@model GlassStore.Entities.TriCH.Models.ProductTriCh
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Xác nhận xóa sản phẩm</h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead text-danger fw-bold">Cảnh báo: Bạn đang thực hiện xóa sản phẩm này. Hành động này không thể hoàn tác!</p>
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            @{
+                                var primaryImage = Model.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
+                                                ?? Model.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
+                                                ?? "https://via.placeholder.com/200x200?text=No+Img";
+                            }
+                            <img src="@primaryImage" class="img-thumbnail rounded shadow-sm" style="max-height: 200px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-8">
+                            <table class="table table-sm">
+                                <tr>
+                                    <th style="width: 150px;">Tên sản phẩm:</th>
+                                    <td>@Model.ProductName</td>
+                                </tr>
+                                <tr>
+                                    <th>Mã sản phẩm (SKU):</th>
+                                    <td><code>@Model.Sku</code></td>
+                                </tr>
+                                <tr>
+                                    <th>Danh mục:</th>
+                                    <td>@Model.CategoryTriCh?.CategoryName</td>
+                                </tr>
+                                <tr>
+                                    <th>Thương hiệu:</th>
+                                    <td>@Model.Brand</td>
+                                </tr>
+                                <tr>
+                                    <th>Giá:</th>
+                                    <td class="text-primary fw-bold">@Model.Price.ToString("N0") đ</td>
+                                </tr>
+                                <tr>
+                                    <th>Tổng tồn kho:</th>
+                                    <td>@(Model.ProductColorTriChes?.Sum(c => c.StockQuantity ?? 0) ?? Model.StockQuantity)</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning mt-4">
+                        <i class="bi bi-exclamation-triangle-fill"></i> 
+                        <strong>Lưu ý:</strong> Xóa sản phẩm sẽ dẫn đến việc xóa tất cả các hình ảnh, màu sắc và biến thể liên quan.
+                    </div>
+
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="ProductTriChid" />
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Manage" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Quay lại danh sách
+                            </a>
+                            <button type="submit" class="btn btn-danger btn-lg px-4">
+                                <i class="bi bi-trash"></i> Xác nhận xóa vĩnh viễn
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

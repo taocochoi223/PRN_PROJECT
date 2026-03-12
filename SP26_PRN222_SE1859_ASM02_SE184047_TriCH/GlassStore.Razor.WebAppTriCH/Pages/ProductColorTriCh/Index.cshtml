@@ -1,0 +1,54 @@
+﻿@page
+@model GlassStore.Razor.WebAppTriCH.Pages.ProductColorTriCh.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductColorTriCh[0].ColorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductColorTriCh[0].ColorCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductColorTriCh[0].StockQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductColorTriCh[0].ProductTriCh)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ProductColorTriCh) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ColorName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ColorCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductTriCh.Brand)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ColorTriChid">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ColorTriChid">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ColorTriChid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

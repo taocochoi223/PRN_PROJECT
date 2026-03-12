@@ -65,13 +65,9 @@
                                             <a asp-action="Edit" asp-route-id="@item.ImageTriChid" class="btn btn-sm btn-outline-primary">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('Xác nhận xóa hình ảnh này?')">
-                                                <input type="hidden" name="id" value="@item.ImageTriChid" />
-                                                <input type="hidden" name="productId" value="@item.ProductTriChid" />
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            </form>
+                                            <a asp-action="Delete" asp-route-id="@item.ImageTriChid" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

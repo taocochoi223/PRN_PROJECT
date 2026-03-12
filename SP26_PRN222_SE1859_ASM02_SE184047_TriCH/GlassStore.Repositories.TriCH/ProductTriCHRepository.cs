@@ -23,6 +23,7 @@ namespace GlassStore.Repositories.TriCH
             var query = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
                 .Include(p => p.ProductImageTriChes)
+                .Include(p => p.ProductColorTriChes)
                 .Where(p => p.Status == 1);
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -33,7 +34,7 @@ namespace GlassStore.Repositories.TriCH
 
             var items = await query
                 .OrderByDescending(p => p.CreatedAt)
-                .Skip(pageSize * (pageIndex - 1))
+                .Skip(pageSize * pageIndex)
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -56,6 +57,7 @@ namespace GlassStore.Repositories.TriCH
             var products = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
                 .Include(p => p.ProductImageTriChes)
+                .Include(p => p.ProductColorTriChes)
                 .Where(p => p.CategoryTriChid == categoryId && p.Status == 1)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();

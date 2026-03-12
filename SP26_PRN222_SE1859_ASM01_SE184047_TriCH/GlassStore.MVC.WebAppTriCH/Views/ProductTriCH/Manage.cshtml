@@ -74,40 +74,23 @@
                                     <div class="btn-group">
                                         <a asp-controller="ProductColorTriCH" asp-action="Index"
                                            asp-route-productId="@item.ProductTriChid"
-                                           class="btn btn-sm btn-info" title="Quản lý màu sắc">
+                                           class="btn btn-sm btn-info text-white" title="Quản lý màu sắc">
                                             <i class="bi bi-palette"></i> Màu
                                         </a>
                                         <a asp-controller="ProductImageTriCH" asp-action="Index"
                                            asp-route-productId="@item.ProductTriChid"
                                            class="btn btn-sm btn-secondary" title="Quản lý hình ảnh">
-                                            <i class="bi bi-images"></i> Ảnh
+                                            <i class="bi bi-image"></i> Ảnh
                                         </a>
-                                        <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-info" title="Xem chi tiết"><i class="bi bi-eye"></i></a>
-                                        <a asp-action="Edit" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-@item.ProductTriChid">
+                                        <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-primary" title="Chỉnh sửa">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-danger" title="Xóa">
                                             <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-
-                                    <!-- Delete Modal -->
-                                    <div class="modal fade" id="deleteModal-@item.ProductTriChid" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Xác nhận xóa</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Bạn có chắc muốn xóa sản phẩm <strong>@item.ProductName</strong>?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                                    <form asp-action="Delete" asp-route-id="@item.ProductTriChid" method="post" class="d-inline">
-                                                        <button type="submit" class="btn btn-danger">Xóa</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>

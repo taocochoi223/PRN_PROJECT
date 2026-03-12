@@ -29,8 +29,6 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         {
             int pageSize = 8; 
             int pageIndex = page - 1;
-
-            // Lấy danh mục cho Sidebar
             var allCategories = await _categoryService.GetAllActiveCategoriesAsync();
             ViewData["Categories"] = allCategories;
 
@@ -146,6 +144,15 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                 return RedirectToAction(nameof(Manage));
             }
             await LoadCategoriesToViewBag(product.CategoryTriChid);
+            return View(product);
+        }
+
+        [TypeFilter(typeof(Filters.AuthenticationFilter))]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            var product = await _productService.GetProductByIdAsync(id);
+            if (product == null) return NotFound();
             return View(product);
         }
 
