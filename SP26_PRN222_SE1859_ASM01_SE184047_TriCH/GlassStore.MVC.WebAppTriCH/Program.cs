@@ -1,4 +1,4 @@
-﻿using GlassStore.Repositories.TriCH;
+using GlassStore.Repositories.TriCH;
 using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +19,7 @@ builder.Services.AddScoped<CategoryTriCHRepository>();
 builder.Services.AddScoped<ICategoryTriCHService, CategoryTriCHService>();
 builder.Services.AddScoped<UserAccountRepository>();
 builder.Services.AddScoped<UserAccoutService>();
-builder.Services.AddScoped<ProductColorTriCHRepository>();
-builder.Services.AddScoped<IProductColorTriCHService, ProductColorTriCHService>();
-builder.Services.AddScoped<ProductImageTriCHRepository>();
-builder.Services.AddScoped<IProductImageTriCHService, ProductImageTriCHService>();
+
 builder.Services.AddAuthentication(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {

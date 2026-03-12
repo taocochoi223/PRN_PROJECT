@@ -36,7 +36,7 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">Sản phẩm</th>
+                            <th class="ps-4">Tên sản phẩm</th>
                             <th>Danh mục</th>
                             <th>Giá</th>
                             <th>Kho</th>
@@ -45,18 +45,10 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model) {
-                             var primaryImage = item.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
-                                        ?? item.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
-                                        ?? "https://via.placeholder.com/50x50?text=No+Img";
                             <tr>
                                 <td class="ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <img src="@primaryImage" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                                        <div>
-                                            <div class="fw-bold">@item.ProductName</div>
-                                            <small class="text-muted">ID: @item.ProductTriChid</small>
-                                        </div>
-                                    </div>
+                                    <div class="fw-bold">@item.ProductName</div>
+                                    <small class="text-muted">ID: @item.ProductTriChid</small>
                                 </td>
                                 <td>@item.CategoryTriCh?.CategoryName</td>
                                 <td>@item.Price.ToString("N0") đ</td>
@@ -72,16 +64,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a asp-controller="ProductColorTriCH" asp-action="Index"
-                                           asp-route-productId="@item.ProductTriChid"
-                                           class="btn btn-sm btn-info text-white" title="Quản lý màu sắc">
-                                            <i class="bi bi-palette"></i> Màu
-                                        </a>
-                                        <a asp-controller="ProductImageTriCH" asp-action="Index"
-                                           asp-route-productId="@item.ProductTriChid"
-                                           class="btn btn-sm btn-secondary" title="Quản lý hình ảnh">
-                                            <i class="bi bi-image"></i> Ảnh
-                                        </a>
+
                                         <a asp-action="Details" asp-route-id="@item.ProductTriChid" class="btn btn-sm btn-outline-info" title="Xem chi tiết">
                                             <i class="bi bi-eye"></i>
                                         </a>

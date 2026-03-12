@@ -17,14 +17,7 @@
                     <hr>
                     
                     <div class="row">
-                        <div class="col-md-4 text-center">
-                            @{
-                                var primaryImage = Model.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
-                                                ?? Model.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
-                                                ?? "https://via.placeholder.com/200x200?text=No+Img";
-                            }
-                            <img src="@primaryImage" class="img-thumbnail rounded shadow-sm" style="max-height: 200px; object-fit: cover;">
-                        </div>
+                        
                         <div class="col-md-8">
                             <table class="table table-sm">
                                 <tr>
@@ -48,8 +41,8 @@
                                     <td class="text-primary fw-bold">@Model.Price.ToString("N0") đ</td>
                                 </tr>
                                 <tr>
-                                    <th>Tổng tồn kho:</th>
-                                    <td>@(Model.ProductColorTriChes?.Sum(c => c.StockQuantity ?? 0) ?? Model.StockQuantity)</td>
+                                    <th>Số lượng tồn kho:</th>
+                                    <td>@Model.StockQuantity</td>
                                 </tr>
                             </table>
                         </div>
@@ -57,7 +50,7 @@
 
                     <div class="alert alert-warning mt-4">
                         <i class="bi bi-exclamation-triangle-fill"></i> 
-                        <strong>Lưu ý:</strong> Xóa sản phẩm sẽ dẫn đến việc xóa tất cả các hình ảnh, màu sắc và biến thể liên quan.
+                        <strong>Lưu ý:</strong> Hành động này sẽ xóa sản phẩm khỏi hệ thống.
                     </div>
 
                     <form asp-action="Delete">

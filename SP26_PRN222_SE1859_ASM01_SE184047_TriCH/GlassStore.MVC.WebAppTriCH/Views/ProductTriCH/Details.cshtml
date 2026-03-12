@@ -2,9 +2,7 @@
 
 @{
     ViewData["Title"] = Model.ProductName;
-    var primaryImg = Model.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
-                     ?? Model.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
-                     ?? "https://via.placeholder.com/500x500?text=No+Image";
+    var primaryImg = "https://via.placeholder.com/500x500?text=No+Image";
 }
 
 <div class="container my-5">
@@ -33,19 +31,7 @@
                  <img id="mainImage" src="@primaryImg" class="img-fluid rounded" alt="@Model.ProductName" style="max-height: 500px; object-fit: contain;">
              </div>
              
-             @if (Model.ProductImageTriChes != null && Model.ProductImageTriChes.Count > 1)
-             {
-                 <div class="d-flex gap-2 ms-1 overflow-auto">
-                     @foreach (var img in Model.ProductImageTriChes)
-                     {
-                         <img src="@img.ImageUrl" 
-                              class="img-thumbnail" 
-                              style="width: 80px; height: 80px; cursor: pointer; object-fit: cover;" 
-                              onclick="changeImage(this.src)"
-                              alt="Thumbnail">
-                     }
-                 </div>
-             }
+
         </div>
 
         <!-- Product Info -->

@@ -74,9 +74,7 @@
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     @foreach (var item in Model)
                     {
-                        var primaryImage = item.ProductImageTriChes?.FirstOrDefault(x => x.IsPrimary == true)?.ImageUrl
-                                        ?? item.ProductImageTriChes?.FirstOrDefault()?.ImageUrl
-                                        ?? "https://via.placeholder.com/300x300?text=No+Image";
+                        var primaryImage = "https://via.placeholder.com/300x300?text=No+Image";
 
                         <div class="col">
                             <div class="card h-100 shadow-sm">
