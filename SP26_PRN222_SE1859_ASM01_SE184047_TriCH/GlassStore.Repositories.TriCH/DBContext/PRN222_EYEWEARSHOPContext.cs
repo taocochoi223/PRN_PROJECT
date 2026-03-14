@@ -35,8 +35,6 @@ public partial class PRN222_EYEWEARSHOPContext : DbContext
 
     public virtual DbSet<PrescriptionPhuHn> PrescriptionPhuHns { get; set; }
 
-
-
     public virtual DbSet<ProductReviewMiLtt> ProductReviewMiLtts { get; set; }
 
     public virtual DbSet<ProductTriCh> ProductTriChes { get; set; }
@@ -424,8 +422,6 @@ public partial class PRN222_EYEWEARSHOPContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Prescription_Order");
         });
-
-
 
         modelBuilder.Entity<ProductReviewMiLtt>(entity =>
         {

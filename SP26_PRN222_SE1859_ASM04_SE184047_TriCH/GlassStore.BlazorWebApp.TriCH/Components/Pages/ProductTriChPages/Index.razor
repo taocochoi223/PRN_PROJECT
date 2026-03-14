@@ -1,5 +1,5 @@
 @page "/producttriches"
-@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@rendermode @(new InteractiveServerRenderMode(prerender: true))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using GlassStore.Entities.TriCH.Models
@@ -7,23 +7,36 @@
 @inject GlassStore.Services.TriCH.IProductTriCHService _productService;
 
 <PageTitle>Product Management</PageTitle>
-
-<h1>Product Management</h1>
-
-<p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Product Management</h1>
     <a href="producttriches/create" class="btn btn-success">Create New</a>
-</p>
+</div>
+
+<div class="mb-3 d-flex gap-2">
+    <input type="text" class="form-control w-25" placeholder="Search product name..."
+           value="@searchTerm" @oninput="HandleSearch" />
+</div>
 
 @if (isLoading)
 {
     <div class="alert alert-info py-1">Updating data...</div>
 }
 
-<QuickGrid Class="table table-striped" ItemsProvider="productProvider" Pagination="pagination">
+<QuickGrid @ref="myGrid" Class="table table-striped" ItemsProvider="productProvider" Pagination="pagination">
     <PropertyColumn Property="producttrich => producttrich.ProductName" Title="Name" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Sku" Title="SKU" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Brand" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Price" Format="C0" Sortable="true" />
+    <TemplateColumn Title="Status">
+        @if (context.Status == 1)
+        {
+            <span class="badge bg-success">Active</span>
+        }
+        else
+        {
+            <span class="badge bg-secondary">Inactive</span>
+        }
+    </TemplateColumn>
     <PropertyColumn Property="producttrich => producttrich.StockQuantity" Title="Stock" Sortable="true" />
     
     <TemplateColumn Context="producttrich" Title="Actions">
@@ -36,30 +49,55 @@
 </QuickGrid>
 
 <Paginator State="@pagination" />
-
 @code {
-    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    QuickGrid<ProductTriCh> myGrid = default!;
+    PaginationState pagination = new() { ItemsPerPage = 10 };
     GridItemsProvider<ProductTriCh> productProvider = default!;
-    bool isLoading = false; 
+    bool isLoading;
+    string searchTerm = "";
+    
+    // Timer để delay việc search (Debounce)
+    private System.Timers.Timer? _debounceTimer;
 
     protected override void OnInitialized()
     {
-        productProvider = async request =>
+        productProvider = LoadProducts;
+    }
+
+    private void HandleSearch(ChangeEventArgs e)
+    {
+        searchTerm = e.Value?.ToString() ?? "";
+        
+        // Hủy timer cũ nếu người dùng đang gõ tiếp
+        _debounceTimer?.Stop();
+        _debounceTimer?.Dispose();
+
+        // Tạo timer mới, chờ 300ms sau khi ngừng gõ mới search
+        _debounceTimer = new System.Timers.Timer(300);
+        _debounceTimer.Elapsed += async (s, ev) =>
         {
-            isLoading = true;
-            StateHasChanged();
-
-            int pageSize = request.Count ?? pagination.ItemsPerPage;
-            int pageIndex = request.StartIndex / pageSize; 
-
-            var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex, pageSize);
-
-            isLoading = false;
-            StateHasChanged();
-
-            return GridItemsProviderResult.From(
-                items: items,
-                totalItemCount: totalCount);
+            await InvokeAsync(async () =>
+            {
+                if (myGrid != null)
+                {
+                    await myGrid.RefreshDataAsync();
+                }
+            });
+            _debounceTimer.Stop();
         };
+        _debounceTimer.Start();
+    }
+
+    private async ValueTask<GridItemsProviderResult<ProductTriCh>> LoadProducts(GridItemsProviderRequest<ProductTriCh> request)
+    {
+        isLoading = true;
+        
+        int pageSize = request.Count ?? pagination.ItemsPerPage;
+        int pageIndex = request.StartIndex / pageSize;
+
+        var (items, totalCount) = await _productService.GetAllProductPagedAsync(pageIndex, pageSize, searchTerm);
+
+        isLoading = false;
+        return GridItemsProviderResult.From(items, totalCount);
     }
 }

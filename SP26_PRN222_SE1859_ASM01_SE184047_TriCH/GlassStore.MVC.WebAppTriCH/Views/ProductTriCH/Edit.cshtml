@@ -17,7 +17,6 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="ProductTriChid" />
                         <input type="hidden" asp-for="CreatedAt" />
-                        <input type="hidden" asp-for="Status" />
                         <input type="hidden" asp-for="Sku" />
                         
                         <div class="row g-3">
@@ -82,10 +81,19 @@
                                 <span asp-validation-for="Dimensions" class="text-danger"></span>
                             </div>
 
-                            <div class="col-md-6">
+                             <div class="col-md-6">
                                 <label asp-for="StockQuantity" class="form-label">Số lượng trong kho</label>
                                 <input asp-for="StockQuantity" class="form-control" />
                                 <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label">Trạng thái</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="1">Đang bán</option>
+                                    <option value="0">Ngừng bán</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
                             </div>
                         </div>
 

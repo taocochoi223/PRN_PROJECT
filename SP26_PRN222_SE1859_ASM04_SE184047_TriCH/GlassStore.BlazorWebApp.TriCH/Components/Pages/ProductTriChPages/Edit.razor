@@ -84,8 +84,11 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="status" class="form-label">Status:</label>
-                    <InputText id="status" @bind-Value="StatusString" class="form-control" />
-                    <ValidationMessage For="() => StatusString" class="text-danger" />
+                    <InputSelect id="status" @bind-Value="ProductTriCh.Status" class="form-select">
+                        <option value="1">Active (True)</option>
+                        <option value="0">Inactive (False)</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => ProductTriCh.Status" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="createdat" class="form-label">CreatedAt:</label>
@@ -147,12 +150,12 @@ else
         try
         {
             await _service.UpdateProductAsync(ProductTriCh!);
-            NavigationManager.NavigateTo("/producttriches", forceLoad: true);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            throw new Exception($"Error deleting category: {ex.Message}", ex);
         }
+        NavigationManager.NavigateTo("/producttriches");
     }
 
 

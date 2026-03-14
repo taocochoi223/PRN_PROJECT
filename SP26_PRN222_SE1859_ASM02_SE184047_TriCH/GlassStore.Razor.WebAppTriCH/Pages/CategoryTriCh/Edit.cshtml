@@ -31,7 +31,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="CategoryTriCh.Status" class="control-label"></label>
-                <input asp-for="CategoryTriCh.Status" class="form-control" />
+                <select asp-for="CategoryTriCh.Status" class="form-control">
+                    <option value="1">Active</option>
+                    <option value="0">InActive</option>
+                </select>
                 <span asp-validation-for="CategoryTriCh.Status" class="text-danger"></span>
             </div>
             <div class="form-group">

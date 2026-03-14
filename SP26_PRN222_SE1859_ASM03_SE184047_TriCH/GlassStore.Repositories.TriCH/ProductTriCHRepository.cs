@@ -22,7 +22,7 @@ namespace GlassStore.Repositories.TriCH
         {
             var query = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
-                .Where(p => p.Status == 1);
+                .AsQueryable();
             if (!string.IsNullOrWhiteSpace(search))
             {
                 query = query.Where(p => p.ProductName.Contains(search));
@@ -43,7 +43,7 @@ namespace GlassStore.Repositories.TriCH
         {
             var product = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
-                .FirstOrDefaultAsync(p => p.ProductTriChid == productId && p.Status == 1);
+                .FirstOrDefaultAsync(p => p.ProductTriChid == productId);
             return await product;
         }
 
@@ -52,7 +52,7 @@ namespace GlassStore.Repositories.TriCH
         {
             var products = _context.ProductTriChes
                 .Include(p => p.CategoryTriCh)
-                .Where(p => p.CategoryTriChid == categoryId && p.Status == 1)
+                .Where(p => p.CategoryTriChid == categoryId)
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
             return await products;

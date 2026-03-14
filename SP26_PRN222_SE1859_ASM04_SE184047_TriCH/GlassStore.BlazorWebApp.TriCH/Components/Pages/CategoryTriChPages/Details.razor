@@ -1,0 +1,54 @@
+﻿@page "/categorytriches/details"
+@using Microsoft.EntityFrameworkCore
+@using GlassStore.Entities.TriCH.Models
+@inject GlassStore.Services.TriCH.ICategoryTriCHService _service
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>CategoryTriCh</h2>
+    <hr />
+    @if (categorytrich is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">CategoryName</dt>
+            <dd class="col-sm-10">@categorytrich.CategoryName</dd>
+            <dt class="col-sm-2">Slug</dt>
+            <dd class="col-sm-10">@categorytrich.Slug</dd>
+            <dt class="col-sm-2">ParentId</dt>
+            <dd class="col-sm-10">@categorytrich.ParentId</dd>
+            <dt class="col-sm-2">Status</dt>
+            <dd class="col-sm-10">@categorytrich.Status</dd>
+        </dl>
+        <div>
+            <a href="@($"/categorytriches/edit?categorytrichid={categorytrich.CategoryTriChid}")">Edit</a> |
+            <a href="@($"/categorytriches")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private CategoryTriCh? categorytrich;
+
+    [SupplyParameterFromQuery]
+    private int CategoryTriChid { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CategoryTriCh? category = await _service.GetCategoryByIdAsync(CategoryTriChid);
+        if (category is null)
+        {
+            throw new Exception($"Category with ID {CategoryTriChid} not found.");
+        }
+        else
+        {
+            categorytrich = category;
+        }
+    }
+}

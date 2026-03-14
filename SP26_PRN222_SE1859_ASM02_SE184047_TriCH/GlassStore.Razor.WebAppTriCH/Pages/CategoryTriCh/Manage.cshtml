@@ -7,9 +7,22 @@
 
 <h1>Manage Categories</h1>
 
-<p>
-    <a asp-page="./Create" class="btn btn-success">Create New</a>
-</p>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="mb-0">
+        <a asp-page="./Create" class="btn btn-success">Create New</a>
+    </p>
+    <form method="get" class="d-flex gap-2" style="max-width: 400px;">
+        <div class="input-group">
+            <input type="text" name="SearchString" value="@Model.SearchString" class="form-control" placeholder="Search categories..." />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            <a asp-page="./Manage" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i> Clear
+            </a>
+        </div>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -38,7 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Slug)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @(item.Status == 1 ? "Active" : "InActive")
             </td>
             <td id="parent-name-@item.CategoryTriChid">
                 @Html.DisplayFor(modelItem => item.Parent.CategoryName)
@@ -58,6 +71,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script>
         var connection = new signalR.HubConnectionBuilder().withUrl("/EyewareHub").build();
+        var currentSearch = "@Html.Raw(Model.SearchString?.Replace("\"", "\\\""))";
+
 
         connection.start().then(function () {
             console.log("SignalR connected for Categories");
@@ -74,6 +89,12 @@
 
         connection.on("ReceiveHubCreate_categoryTriCh", function (item) {
             console.log("New category received:", item);
+
+            if (currentSearch && item.categoryName && !item.categoryName.toLowerCase().includes(currentSearch.toLowerCase())) {
+                console.log("Category does not match search, skipping add.");
+                return;
+            }
+
             var tbody = document.getElementById("table-body");
             if (tbody) {
                 var row = document.createElement("tr");
@@ -82,7 +103,7 @@
                 row.innerHTML = `
                     <td>${item.categoryName || ""}</td>
                     <td>${item.slug || ""}</td>
-                    <td>${item.status || 0}</td>
+                    <td>${item.status == 1 ? "Active" : "InActive"}</td>
                     <td>${item.parentName || ""}</td>
                     <td>
                         <div class="d-flex gap-1">
@@ -99,10 +120,17 @@
         connection.on("ReceiveHubUpdate_categoryTriCh", function (item) {
             console.log("Category updated:", item);
             var row = document.getElementById("row-" + item.categoryTriChid);
+
+            // If searching and updated item doesn't match, remove it
+            if (currentSearch && item.categoryName && !item.categoryName.toLowerCase().includes(currentSearch.toLowerCase())) {
+                if (row) row.remove();
+                return;
+            }
+
             if (row) {
                 row.cells[0].innerText = item.categoryName || "";
                 row.cells[1].innerText = item.slug || "";
-                row.cells[2].innerText = item.status || 0;
+                row.cells[2].innerText = item.status == 1 ? "Active" : "InActive";
                 if(item.parentName) {
                      row.cells[3].innerText = item.parentName;
                 }

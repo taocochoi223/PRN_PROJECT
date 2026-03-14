@@ -12,9 +12,16 @@
             <a asp-page="./Create" class="btn btn-success">Create New</a>
         </p>
     </div>
-    <form method="get" class="d-flex">
-        <input type="text" name="SearchToken" value="@Model.SearchToken" class="form-control me-2" placeholder="Search products..." />
-        <button type="submit" class="btn btn-primary">Search</button>
+    <form method="get" class="d-flex gap-2" style="max-width: 400px;">
+        <div class="input-group">
+            <input type="text" name="SearchToken" value="@Model.SearchToken" class="form-control" placeholder="Search products..." />
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Search
+            </button>
+            <a asp-page="./Manage" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i> Clear
+            </a>
+        </div>
     </form>
 </div>
 <table class="table">
@@ -96,7 +103,7 @@
                     @Html.DisplayFor(modelItem => item.StockQuantity)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
+                    @(item.Status == 1 ? "Active" : "InActive")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CreatedAt)
@@ -142,6 +149,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
     <script>
         var connection = new signalR.HubConnectionBuilder().withUrl("/EyewareHub").build();
+        var currentSearch = "@Html.Raw(Model.SearchToken?.Replace("\"", "\\\""))";
 
         connection.start().then(function () {
             console.log("SignalR connected");
@@ -158,6 +166,12 @@
 
         connection.on("ReceiveHubCreate_productTriCh", function (item) {
             console.log("New item received:", item);
+
+            if (currentSearch && item.productName && !item.productName.toLowerCase().includes(currentSearch.toLowerCase())) {
+                console.log("Product does not match search, skipping add.");
+                return;
+            }
+
             var tbody = document.getElementById("table-body");
             if (tbody) {
                 var row = document.createElement("tr");
@@ -177,7 +191,7 @@
                     <td>${item.material || ""}</td>
                     <td>${item.dimensions || ""}</td>
                     <td>${item.stockQuantity || 0}</td>
-                    <td>${item.status || 0}</td>
+                    <td>${item.status == 1 ? "Active" : "InActive"}</td>
                     <td>${createdAt}</td>
                     <td>${updatedAt}</td>
                     <td>${categoryName}</td>
@@ -196,6 +210,13 @@
         connection.on("ReceiveHubUpdate_productTriCh", function (item) {
             console.log("Product updated:", item);
             var row = document.getElementById("row-" + item.productTriChid);
+
+            // If searching and updated item doesn't match, remove it
+            if (currentSearch && item.productName && !item.productName.toLowerCase().includes(currentSearch.toLowerCase())) {
+                if (row) row.remove();
+                return;
+            }
+
             if (row) {
                 var updatedAt = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : "";
                 
@@ -208,7 +229,7 @@
                 row.cells[6].innerText = item.material || "";
                 row.cells[7].innerText = item.dimensions || "";
                 row.cells[8].innerText = item.stockQuantity || 0;
-                row.cells[9].innerText = item.status || 0;
+                row.cells[9].innerText = item.status == 1 ? "Active" : "InActive";
                 row.cells[11].innerText = updatedAt;
                 row.cells[12].innerText = item.categoryName || "";
                 row.style.backgroundColor = "#fff3cd";

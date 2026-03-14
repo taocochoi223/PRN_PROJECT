@@ -74,12 +74,15 @@
                 <label for="stockquantity" class="form-label">StockQuantity:</label> 
                 <InputNumber id="stockquantity" @bind-Value="ProductTriCh.StockQuantity" class="form-control" /> 
                 <ValidationMessage For="() => ProductTriCh.StockQuantity" class="text-danger" /> 
-            </div>        
+            </div>
             <div class="mb-3">
-                <label for="status" class="form-label">Status:</label> 
-                <InputText id="status" @bind-Value="StatusString" class="form-control" /> 
-                <ValidationMessage For="() => StatusString" class="text-danger" /> 
-            </div>        
+                <label for="status" class="form-label">Status:</label>
+                <InputSelect id="status" @bind-Value="ProductTriCh.Status" class="form-select">
+                    <option value="1">Active (True)</option>
+                    <option value="0">Inactive (False)</option>
+                </InputSelect>
+                <ValidationMessage For="() => ProductTriCh.Status" class="text-danger" />
+            </div>
             <div class="mb-3">
                 <label for="createdat" class="form-label">CreatedAt:</label> 
                 <InputDate id="createdat" @bind-Value="ProductTriCh.CreatedAt" class="form-control" /> 

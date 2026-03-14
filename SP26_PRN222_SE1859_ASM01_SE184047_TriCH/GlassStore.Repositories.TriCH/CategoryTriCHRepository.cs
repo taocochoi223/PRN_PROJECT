@@ -26,7 +26,6 @@ namespace GlassStore.Repositories.TriCH
             return await cate;
         }
 
-        // Dùng cho dropdown (không phân trang) - được gọi từ LoadCategoriesToViewBag
         public async Task<List<CategoryTriCh>> GetAllCategoriesAsync()
         {
             return await _context.CategoryTriChes
@@ -34,7 +33,6 @@ namespace GlassStore.Repositories.TriCH
                 .ToListAsync();
         }
 
-        // Dùng cho trang list có phân trang + tìm kiếm
         public async Task<(List<CategoryTriCh> Items, int TotalCount)> GetAllCategoriesPagedAsync(
             int pageIndex, int pageSize, string? search = null)
         {

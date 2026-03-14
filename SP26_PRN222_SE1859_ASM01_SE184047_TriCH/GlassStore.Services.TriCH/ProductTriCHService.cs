@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +48,7 @@ namespace GlassStore.Services.TriCH
                     throw new InvalidOperationException("SKU đã tồn tại. Vui lòng nhập mã khác.");
                 }
             }
-            product.Status = 1; 
+            product.Status ??= 1; 
             product.CreatedAt = DateTime.Now;
             await _repo.CreateAsync(product);
         }

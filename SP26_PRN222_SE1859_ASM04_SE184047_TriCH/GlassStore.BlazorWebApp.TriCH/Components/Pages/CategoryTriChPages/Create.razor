@@ -1,0 +1,77 @@
+﻿@page "/categorytriches/create"
+@using Microsoft.EntityFrameworkCore
+@using GlassStore.Entities.TriCH.Models
+@inject GlassStore.Services.TriCH.ICategoryTriCHService _service;
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>CategoryTriCh</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="CategoryTriCh" OnValidSubmit="AddCategoryTriCh" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="categoryname" class="form-label">CategoryName:</label> 
+                <InputText id="categoryname" @bind-Value="CategoryTriCh.CategoryName" class="form-control" /> 
+                <ValidationMessage For="() => CategoryTriCh.CategoryName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="slug" class="form-label">Slug:</label> 
+                <InputText id="slug" @bind-Value="CategoryTriCh.Slug" class="form-control" /> 
+                <ValidationMessage For="() => CategoryTriCh.Slug" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="parentid" class="form-label">ParentId:</label> 
+                <InputNumber id="parentid" @bind-Value="CategoryTriCh.ParentId" class="form-control" /> 
+                <ValidationMessage For="() => CategoryTriCh.ParentId" class="text-danger" /> 
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <InputSelect id="status" @bind-Value="CategoryTriCh.Status" class="form-select">
+                    <option value="1">Active (True)</option>
+                    <option value="0">Inactive (False)</option>
+                </InputSelect>
+                <ValidationMessage For="() => CategoryTriCh.Status" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/categorytriches">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private CategoryTriCh CategoryTriCh { get; set; } = new();
+
+    [SupplyParameterFromForm]
+    private string StatusString { get; set; } = "";
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddCategoryTriCh()
+    {
+        if(byte.TryParse(StatusString, out var status))
+        {
+            CategoryTriCh.Status = status;
+        }
+        else
+        {
+            CategoryTriCh.Status = null;
+        }
+
+        try
+        {
+            await _service.AddCategoryAsync(CategoryTriCh);
+        }catch (Exception ex)
+        {
+            throw new Exception($"Error creating category: {ex.Message}", ex);
+        }
+    }
+}

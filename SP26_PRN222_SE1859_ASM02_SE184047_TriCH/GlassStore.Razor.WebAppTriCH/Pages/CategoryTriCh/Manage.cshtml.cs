@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,11 +20,21 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
             _categoryService = category;
         }
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
         public IList<GlassStore.Entities.TriCH.Models.CategoryTriCh> CategoryTriCh { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            CategoryTriCh = await _categoryService.GetAllCategoriesAsync();
+            var categories = await _categoryService.GetAllCategoriesAsync();
+
+            if (!string.IsNullOrEmpty(SearchString))
+            {
+                categories = categories.Where(c => c.CategoryName.Contains(SearchString, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            CategoryTriCh = categories;
         }
     }
 }
