@@ -1,7 +1,8 @@
-﻿using GlassStore.BlazorWebApp.TriCH.Components;
+using GlassStore.BlazorWebApp.TriCH.Components;
 using GlassStore.Repositories.TriCH;
 using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +17,21 @@ builder.Services.AddDbContext<PRN222_EYEWEARSHOPContext>(options =>
 
 builder.Services.AddScoped<ProductTriCHRepository>();
 builder.Services.AddScoped<CategoryTriCHRepository>();
+builder.Services.AddScoped<UserAccountRepository>();
 
 builder.Services.AddScoped<IProductTriCHService, ProductTriCHService>();
 builder.Services.AddScoped<ICategoryTriCHService, CategoryTriCHService>();
+builder.Services.AddScoped<UserAccoutService>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.AccessDeniedPath = "/Account/Forbidden";
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
 
@@ -36,7 +49,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+

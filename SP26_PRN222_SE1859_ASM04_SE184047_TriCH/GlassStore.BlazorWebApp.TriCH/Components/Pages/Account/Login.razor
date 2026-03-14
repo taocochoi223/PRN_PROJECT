@@ -1,0 +1,122 @@
+@page "/Account/Login"
+@layout Layout.EmptyLayout
+@using System.Security.Claims
+@using GlassStore.Services.TriCH
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Mvc
+
+@inject UserAccoutService _userAccoutService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100vw;
+    }
+</style>
+
+<div class="login-container">
+    <div style="width: 400px;">
+        <div class="card shadow">
+
+            <div class="card-header bg-primary text-white text-center">
+                <h3>Login</h3>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <div class="alert alert-danger">@ErrorMessage</div>
+                }
+                <EditForm Model="Input" OnValidSubmit="LoginUser" FormName="LoginForm">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <InputText @bind-Value="Input.Email" class="form-control" id="email" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <InputText @bind-Value="Input.Password" type="password" class="form-control" id="password" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    [SupplyParameterFromForm]
+    public LoginInput Input { get; set; } = new();
+
+    public string? ErrorMessage { get; set; }
+
+    public class LoginInput
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    protected override void OnInitialized()
+    {
+        if (HttpContext.User.Identity?.IsAuthenticated == true)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    public async Task LoginUser()
+    {
+        if (string.IsNullOrEmpty(Input.Email) || string.IsNullOrEmpty(Input.Password))
+        {
+            ErrorMessage = "Email and Password are required";
+            return;
+        }
+
+        var user = await _userAccoutService.GetUserAccountAsync(Input.Email, Input.Password);
+        if (user != null)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim("FullName", user.FullName),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString() ?? "User")
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            if (user.RoleId == 1) 
+            {
+                NavigationManager.NavigateTo("/producttriches", true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo("/", true);
+            }
+        }
+        else
+        {
+            ErrorMessage = "Invalid Email or Password";
+        }
+    }
+}

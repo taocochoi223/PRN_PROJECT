@@ -1,4 +1,5 @@
 @page "/categorytriches"
+@attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: true))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -27,8 +28,8 @@
     <PropertyColumn Property="c => c.CategoryName" Title="Category Name" Sortable="true" />
     <PropertyColumn Property="c => c.Slug" Title="Slug" Sortable="true" />
 
-    <TemplateColumn Title="Status">
-        @if (context.Status == 1)
+    <TemplateColumn Title="Status" Context="c">
+        @if (c.Status == 1)
         {
             <span class="badge bg-success">Active</span>
         }
@@ -38,15 +39,15 @@
         }
     </TemplateColumn>
 
-    <TemplateColumn Title="Actions">
+    <TemplateColumn Title="Actions" Context="c">
         <div class="d-flex gap-1">
-            <a class="btn btn-sm btn-primary" href="@($"categorytriches/edit?categorytrichid={context.CategoryTriChid}")">
+            <a class="btn btn-sm btn-primary" href="@($"categorytriches/edit?categorytrichid={c.CategoryTriChid}")">
                 Edit
             </a>
-            <a class="btn btn-sm btn-info text-white" href="@($"categorytriches/details?categorytrichid={context.CategoryTriChid}")">
+            <a class="btn btn-sm btn-info text-white" href="@($"categorytriches/details?categorytrichid={c.CategoryTriChid}")">
                 Details
             </a>
-            <a class="btn btn-sm btn-danger" href="@($"categorytriches/delete?categorytrichid={context.CategoryTriChid}")">
+            <a class="btn btn-sm btn-danger" href="@($"categorytriches/delete?categorytrichid={c.CategoryTriChid}")">
                 Delete
             </a>
         </div>

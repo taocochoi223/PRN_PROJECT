@@ -1,4 +1,5 @@
 @page "/producttriches"
+@attribute [Authorize]
 @rendermode @(new InteractiveServerRenderMode(prerender: true))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -27,8 +28,8 @@
     <PropertyColumn Property="producttrich => producttrich.Sku" Title="SKU" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Brand" Sortable="true" />
     <PropertyColumn Property="producttrich => producttrich.Price" Format="C0" Sortable="true" />
-    <TemplateColumn Title="Status">
-        @if (context.Status == 1)
+    <TemplateColumn Title="Status" Context="p">
+        @if (p.Status == 1)
         {
             <span class="badge bg-success">Active</span>
         }
