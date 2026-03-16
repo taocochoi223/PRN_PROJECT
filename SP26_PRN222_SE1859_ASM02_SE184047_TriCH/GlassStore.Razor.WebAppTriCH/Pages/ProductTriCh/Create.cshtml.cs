@@ -10,9 +10,11 @@ using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
 using Microsoft.AspNetCore.SignalR;
 using GlassStore.Razor.WebAppTriCH.Hubs;
+using GlassStore.Razor.WebAppTriCH.Filters;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
+    [AuthenticationFilter]
     public class CreateModel : PageModel
     {
         private readonly IProductTriCHService _productService;
@@ -29,8 +31,16 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
         [BindProperty]
         public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
+        private bool IsAdmin()
+        {
+            var roleId = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            return roleId == "1";
+        }
+
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
+
             var cate = await _categoryService.GetAllCategoriesAsync();
             ViewData["CategoryTriChid"] = new SelectList(cate, "CategoryTriChid", "CategoryName");
             return Page();
@@ -38,6 +48,8 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
+
             if (!ModelState.IsValid)
             {
                 var cate = await _categoryService.GetAllCategoriesAsync();

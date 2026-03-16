@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,9 +10,12 @@ using GlassStore.Repositories.TriCH.DBContext;
 using Microsoft.AspNetCore.SignalR;
 using GlassStore.Razor.WebAppTriCH.Hubs;
 using GlassStore.Services.TriCH;
+using GlassStore.Razor.WebAppTriCH.Filters;
+using System.Security.Claims;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 {
+    [AuthenticationFilter]
     public class DeleteModel : PageModel
     {
         private readonly IProductTriCHService _productService;
@@ -26,8 +29,15 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
         [BindProperty]
         public GlassStore.Entities.TriCH.Models.ProductTriCh ProductTriCh { get; set; } = default!;
 
+        private bool IsAdmin()
+        {
+            var roleId = User.FindFirst(ClaimTypes.Role)?.Value;
+            return roleId == "1";
+        }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
             if (id == null)
             {
                 return NotFound();
@@ -43,6 +53,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
             if (id == null)
             {
                 return NotFound();

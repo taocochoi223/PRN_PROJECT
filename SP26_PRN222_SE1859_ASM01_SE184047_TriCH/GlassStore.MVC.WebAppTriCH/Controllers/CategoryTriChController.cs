@@ -40,8 +40,9 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(category);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await LoadParentsToViewBag();
             return View();
         }
 
@@ -54,6 +55,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                 await _service.AddCategoryAsync(category);
                 return RedirectToAction(nameof(Index));
             }
+            await LoadParentsToViewBag(category.ParentId);
             return View(category);
         }
 
@@ -62,6 +64,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             var category = await _service.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
 
+            await LoadParentsToViewBag(category.ParentId, id);
             return View(category);
         }
 
@@ -76,6 +79,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                 await _service.UpdateCategoryAsync(category);
                 return RedirectToAction(nameof(Index));
             }
+            await LoadParentsToViewBag(category.ParentId, id);
             return View(category);
         }
 
@@ -93,6 +97,17 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         {
             await _service.DeleteCategoryAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task LoadParentsToViewBag(int? selectedId = null, int? excludeId = null)
+        {
+            var categories = await _service.GetAllCategoriesAsync();
+            // Không cho phép chọn chính nó làm danh mục cha trong trang Edit
+            if (excludeId.HasValue)
+            {
+                categories = categories.Where(c => c.CategoryTriChid != excludeId.Value).ToList();
+            }
+            ViewData["ParentId"] = new Microsoft.AspNetCore.Mvc.Rendering.SelectList(categories, "CategoryTriChid", "CategoryName", selectedId);
         }
     }
 }

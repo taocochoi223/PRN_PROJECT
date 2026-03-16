@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GlassStore.Entities.TriCH.Models;
-using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
+using GlassStore.Razor.WebAppTriCH.Filters;
+using System.Security.Claims;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 {
+    [AuthenticationFilter]
     public class ManageModel : PageModel
     {
         private readonly ICategoryTriCHService _categoryService;
@@ -25,8 +27,15 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 
         public IList<GlassStore.Entities.TriCH.Models.CategoryTriCh> CategoryTriCh { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        private bool IsAdmin()
         {
+            var roleId = User.FindFirst(ClaimTypes.Role)?.Value;
+            return roleId == "1";
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            if (!IsAdmin()) return RedirectToPage("/Index");
             var categories = await _categoryService.GetAllCategoriesAsync();
 
             if (!string.IsNullOrEmpty(SearchString))
@@ -35,6 +44,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
             }
 
             CategoryTriCh = categories;
+            return Page();
         }
     }
 }

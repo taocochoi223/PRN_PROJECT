@@ -29,6 +29,14 @@
                             <span asp-validation-for="Slug" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="ParentId" class="form-label">Danh mục cha</label>
+                            <select asp-for="ParentId" class="form-select" asp-items="ViewBag.ParentId">
+                                <option value="">-- Chọn danh mục cha (nếu có) --</option>
+                            </select>
+                            <span asp-validation-for="ParentId" class="text-danger"></span>
+                        </div>
+
                          <div class="mb-3">
                             <label asp-for="Status" class="form-label">Trạng thái</label>
                             <select asp-for="Status" class="form-select">

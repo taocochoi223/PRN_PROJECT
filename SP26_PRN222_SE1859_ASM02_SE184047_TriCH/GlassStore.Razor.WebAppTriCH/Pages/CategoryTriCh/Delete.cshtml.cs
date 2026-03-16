@@ -10,9 +10,12 @@ using GlassStore.Repositories.TriCH.DBContext;
 using GlassStore.Services.TriCH;
 using Microsoft.AspNetCore.SignalR;
 using GlassStore.Razor.WebAppTriCH.Hubs;
+using GlassStore.Razor.WebAppTriCH.Filters;
+using System.Security.Claims;
 
 namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 {
+    [AuthenticationFilter]
     public class DeleteModel : PageModel
     {
         private readonly ICategoryTriCHService _categoryService;
@@ -27,8 +30,15 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
         [BindProperty]
         public GlassStore.Entities.TriCH.Models.CategoryTriCh CategoryTriCh { get; set; } = default!;
 
+        private bool IsAdmin()
+        {
+            var roleId = User.FindFirst(ClaimTypes.Role)?.Value;
+            return roleId == "1";
+        }
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
             if (id == null)
             {
                 return NotFound();
@@ -47,6 +57,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
+            if (!IsAdmin()) return RedirectToPage("/Index");
             if (id == null)
             {
                 return NotFound();
