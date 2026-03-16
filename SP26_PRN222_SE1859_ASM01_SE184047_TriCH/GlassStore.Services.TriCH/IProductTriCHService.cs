@@ -1,4 +1,4 @@
-﻿using GlassStore.Entities.TriCH.Models;
+using GlassStore.Entities.TriCH.Models;
 
 namespace GlassStore.Services.TriCH
 {

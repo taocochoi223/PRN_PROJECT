@@ -1,0 +1,35 @@
+@model Data.Models.Book
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<h1>Book Details</h1>
+
+<div>
+    BookId: <span id="span_bookId">@Model.BookId</span> <br />
+    Title: <span id="span_title">@Model.Title</span> <br />
+    Publication Year: <span id="span_publicationYear">@Model.PublicationYear</span>
+</div>
+
+<h3>Authors List</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>AuthorId</th>
+            <th>Name</th>
+            <th>BirthYear</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var auth in Model.Authors)
+        {
+            <tr>
+                <td id="td_authorId_@auth.AuthorId">@auth.AuthorId</td>
+                <td id="td_authorName_@auth.AuthorId">@auth.Name</td>
+                <td id="td_birthYear_@auth.AuthorId">@(auth.BirthYear?.ToString() ?? "N/A")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to list</a>

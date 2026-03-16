@@ -1,0 +1,51 @@
+@model List<Data.Models.Book>
+@{
+    ViewData["Title"] = "Book List";
+}
+
+<h1>Book List</h1>
+
+<form method="get" asp-action="Index">
+    <select name="authorId" id="sl_authors">
+        <option value="0" id="op_0" selected="@(ViewBag.SelectedAuthorId == 0)">All authors</option>
+        @foreach (var author in ViewBag.Authors)
+        {
+            <option value="@author.AuthorId" id="op_@author.AuthorId" 
+                    selected="@(ViewBag.SelectedAuthorId == author.AuthorId)">
+                @author.Name
+            </option>
+        }
+    </select>
+    <input type="submit" value="Filter" id="bt_filter" />
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>BookId</th>
+            <th>Title</th>
+            <th>PublicationYear</th>
+            <th>Authors</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td id="td_bookId_@item.BookId">@item.BookId</td>
+                <td id="td_title_@item.BookId">@item.Title</td>
+                <td id="td_publicationYear_@item.BookId">@item.PublicationYear</td>
+                <td id="td_authors_@item.BookId">
+                    @foreach (var auth in item.Authors)
+                    {
+                        <div id="div_@(item.BookId)_@(auth.AuthorId)">@auth.Name</div>
+                    }
+                </td>
+                <td id="td_action_@item.BookId">
+                    <a href="/Book/@item.BookId" id="a_@item.BookId">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
