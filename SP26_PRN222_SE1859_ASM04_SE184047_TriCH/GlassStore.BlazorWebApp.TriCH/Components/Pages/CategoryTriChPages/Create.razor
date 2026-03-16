@@ -1,4 +1,4 @@
-﻿@page "/categorytriches/create"
+@page "/categorytriches/create"
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _service;
@@ -13,6 +13,7 @@
 <div class="row">
     <div class="col-md-4">
         <EditForm method="post" Model="CategoryTriCh" OnValidSubmit="AddCategoryTriCh" FormName="create" Enhance>
+            <AntiforgeryToken />
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">

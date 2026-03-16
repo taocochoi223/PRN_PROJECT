@@ -40,7 +40,8 @@
                 {
                     <div class="alert alert-danger">@ErrorMessage</div>
                 }
-                <EditForm Model="Input" OnValidSubmit="LoginUser" FormName="LoginForm">
+                <EditForm method="post" Model="Input" OnValidSubmit="LoginUser" FormName="LoginForm">
+                    <AntiforgeryToken />
                     <DataAnnotationsValidator />
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>

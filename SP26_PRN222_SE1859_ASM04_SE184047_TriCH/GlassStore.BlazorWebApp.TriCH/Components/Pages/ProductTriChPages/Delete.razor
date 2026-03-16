@@ -70,6 +70,7 @@
             <dd class="col-sm-10">@ProductTriCh.UpdatedAt</dd>
         </dl>
         <EditForm method="post" Model="ProductTriCh" OnValidSubmit="DeleteProductTriCh" FormName="delete" Enhance>
+            <AntiforgeryToken />
             <input type="hidden" name="ProductTriCh.ProductTriChid" value="@ProductTriCh.ProductTriChid" />
             <div class="mt-4 d-flex gap-1">
                 <button type="submit" class="btn btn-danger">Delete</button>

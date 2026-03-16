@@ -1,4 +1,4 @@
-﻿@page "/categorytriches/edit"
+@page "/categorytriches/edit"
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _service;
@@ -19,6 +19,7 @@ else
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="CategoryTriCh" OnValidSubmit="UpdateCategoryTriCh" FormName="edit" Enhance>
+                <AntiforgeryToken />
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="CategoryTriCh.CategoryTriChid" value="@CategoryTriCh.CategoryTriChid" />

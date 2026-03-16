@@ -1,4 +1,4 @@
-﻿@page "/categorytriches/delete"
+@page "/categorytriches/delete"
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _service;
@@ -34,6 +34,7 @@
             <dd class="col-sm-10">@categorytrich.Status</dd>
         </dl>
         <EditForm method="post" Model="categorytrich" OnValidSubmit="DeleteCategoryTriCh" FormName="delete" Enhance>
+            <AntiforgeryToken />
             <input type="hidden" name="CategoryTriCh.CategoryTriChId" value="@categorytrich.CategoryTriChid" />
             <div class="mt-4 d-flex gap-1">
                 <button type="submit" class="btn btn-danger">Delete</button>
