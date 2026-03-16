@@ -38,7 +38,8 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!IsAdmin()) return RedirectToPage("/Index");
+            // Mọi người đã qua AuthenticationFilter đều có thể xem list
+            // Chỉ cấm ở các trang can thiệp dữ liệu (Create, Edit, Delete)
 
             var result = await _productService.GetAllProductPagedAsync(PageIndex - 1, PageSize, SearchToken);
             ProductTriCh = result.Items;

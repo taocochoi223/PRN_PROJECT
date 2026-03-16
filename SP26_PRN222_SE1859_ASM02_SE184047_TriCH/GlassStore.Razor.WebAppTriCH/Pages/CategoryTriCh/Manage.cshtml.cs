@@ -35,7 +35,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.CategoryTriCh
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if (!IsAdmin()) return RedirectToPage("/Index");
+            // Cho phép xem danh sách
             var categories = await _categoryService.GetAllCategoriesAsync();
 
             if (!string.IsNullOrEmpty(SearchString))
