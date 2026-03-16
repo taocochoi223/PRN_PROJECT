@@ -29,14 +29,14 @@ namespace GlassStore.Repositories.TriCH
             }
 
             int total = await query.CountAsync();
-
+            int totalPages = (int)Math.Ceiling((double)total / pageSize);
             var items = await query
                 .OrderByDescending(p => p.CreatedAt)
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (items, total);
+            return (items, totalPages);
         }
 
         public async Task<ProductTriCh?> GetProductByIdAsync(int productId)

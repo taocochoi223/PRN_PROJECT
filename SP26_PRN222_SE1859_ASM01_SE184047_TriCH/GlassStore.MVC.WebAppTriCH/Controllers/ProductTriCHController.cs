@@ -64,13 +64,13 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         {
             if (!IsAdmin()) return RedirectToAction("Index", "Home");
 
-            int pageSize = 10; 
+            int pageSize = 5; 
             int pageIndex = page - 1;
 
             var result = await _productService.GetAllProductPagedAsync(pageIndex, pageSize, search);
 
             ViewData["CurrentPage"] = page;
-            ViewData["TotalPages"] = (int)Math.Ceiling((double)result.TotalCount / pageSize);
+            ViewData["TotalPages"] = result.TotalCount;
             ViewData["Search"] = search;
 
             return View(result.Items);
