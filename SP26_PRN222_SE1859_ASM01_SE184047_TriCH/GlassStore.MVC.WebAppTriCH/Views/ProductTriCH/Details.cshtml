@@ -1,80 +1,73 @@
 @model GlassStore.Entities.TriCH.Models.ProductTriCh
 
 @{
-    ViewData["Title"] = Model.ProductName;
-    var primaryImg = "https://via.placeholder.com/500x500?text=No+Image";
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    Layout = "_LayoutAdmin"; // Sử dụng layout Admin cho thống nhất
 }
 
 <div class="container my-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                <li class="breadcrumb-item"><a asp-action="Index">Sản phẩm</a></li>
-                <li class="breadcrumb-item active" aria-current="page">@Model.ProductName</li>
-            </ol>
-        </nav>
-        <div class="d-flex gap-2">
-            <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-shop"></i> Tiếp tục mua sắm
-            </a>
-            <a asp-action="Manage" class="btn btn-secondary btn-sm">
-                <i class="bi bi-arrow-left"></i> Quay lại trang quản lý
-            </a>
-        </div>
-    </div>
-
-    <div class="row g-5">
-        <!-- Product Images -->
-        <div class="col-md-6">
-             <div class="card border-0 mb-3">
-                 <img id="mainImage" src="@primaryImg" class="img-fluid rounded" alt="@Model.ProductName" style="max-height: 500px; object-fit: contain;">
-             </div>
-             
-
-        </div>
-
-        <!-- Product Info -->
-        <div class="col-md-6">
-            <h6 class="text-primary fw-bold text-uppercase">@Model.CategoryTriCh?.CategoryName</h6>
-            <h1 class="display-5 fw-bold mb-3">@Model.ProductName</h1>
-            
-            <div class="mb-3">
-                <h2 class="text-danger fw-bold d-inline-block me-3">@Model.Price.ToString("N0") đ</h2>
-                @if (Model.StockQuantity > 0)
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-primary">Thông tin chi tiết sản phẩm</h4>
+            <div>
+                @if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "1")
                 {
-                    <span class="badge bg-success">Còn hàng</span>
+                    <a asp-action="Edit" asp-route-id="@Model.ProductTriChid" class="btn btn-primary btn-sm">Chỉnh sửa</a>
                 }
-                else
-                {
-                    <span class="badge bg-danger">Hết hàng</span>
-                }
+                <a asp-action="Manage" class="btn btn-secondary btn-sm">Quay lại danh sách</a>
             </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <!-- Cột thông tin chữ -->
+                <div class="col-md-8">
+                    <dl class="row">
+                        <dt class="col-sm-4 text-muted">Mã sản phẩm (ID)</dt>
+                        <dd class="col-sm-8 fw-bold">@Model.ProductTriChid</dd>
 
-            <p class="lead text-muted">@Model.Description</p>
+                        <dt class="col-sm-4 text-muted">Tên sản phẩm</dt>
+                        <dd class="col-sm-8">@Model.ProductName</dd>
 
-            <hr class="my-4">
+                        <dt class="col-sm-4 text-muted">Giá bán</dt>
+                        <dd class="col-sm-8 text-danger fw-bold">@Model.Price.ToString("N0") đ</dd>
 
-            <!-- Specs -->
-             <div class="mb-4">
-                 <h5 class="fw-bold">Thông số kỹ thuật</h5>
-                 <dl class="row">
-                     <dt class="col-sm-3 text-muted">Thương hiệu</dt>
-                     <dd class="col-sm-9">@Model.Brand</dd>
+                        <dt class="col-sm-4 text-muted">Số lượng kho</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.StockQuantity > 0)
+                            {
+                                <span class="badge bg-success">@Model.StockQuantity</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Hết hàng</span>
+                            }
+                        </dd>
 
-                     <dt class="col-sm-3 text-muted">Chất liệu</dt>
-                     <dd class="col-sm-9">@Model.Material</dd>
+                        <dt class="col-sm-4 text-muted">Danh mục</dt>
+                        <dd class="col-sm-8">@Model.CategoryTriCh?.CategoryName</dd>
 
-                     <dt class="col-sm-3 text-muted">Loại gọng</dt>
-                     <dd class="col-sm-9">@Model.FrameType</dd>
-                     
-                     <dt class="col-sm-3 text-muted">Kích thước</dt>
-                     <dd class="col-sm-9">@Model.Dimensions</dd>
-                 </dl>
-             </div>
-             
-             
-            
+                        <dt class="col-sm-4 text-muted">Thương hiệu</dt>
+                        <dd class="col-sm-8">@Model.Brand</dd>
+
+                        <dt class="col-sm-4 text-muted">Chất liệu</dt>
+                        <dd class="col-sm-8">@Model.Material</dd>
+
+                        <dt class="col-sm-4 text-muted">Loại gọng</dt>
+                        <dd class="col-sm-8">@Model.FrameType</dd>
+
+                        <dt class="col-sm-4 text-muted">Kích thước</dt>
+                        <dd class="col-sm-8">@Model.Dimensions</dd>
+
+                        <dt class="col-sm-4 text-muted">Trạng thái</dt>
+                        <dd class="col-sm-8">
+                            @(Model.Status == 1 ? "Đang kinh doanh" : "Ngừng kinh doanh")
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Mô tả</dt>
+                        <dd class="col-sm-8 text-muted">@Model.Description</dd>
+                    </dl>
+                </div>
+            </div>
         </div>
     </div>
 </div>
