@@ -24,9 +24,9 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
                 if (User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "1" || 
                     User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "2")
                 {
-                    return RedirectToAction("Manage", "ProductTriCH");
+                    return RedirectToAction("Index", "ProductTriCH");
                 }
-                return RedirectToAction("Index", "ProductTriCH");
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -84,11 +84,11 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
                 if (user.RoleId == 1 || user.RoleId == 2) 
                 {
-                    return RedirectToAction("Manage", "ProductTriCH");
+                    return RedirectToAction("Index", "ProductTriCH");
                 }
                 else
                 {
-                    return RedirectToAction("Index", "ProductTriCH");
+                    return RedirectToAction("Index", "Home");
                 }
             }
 
