@@ -1,4 +1,6 @@
 @page "/categorytriches/edit"
+@attribute [Authorize(Roles = "1")]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _service;
@@ -19,28 +21,27 @@ else
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="CategoryTriCh" OnValidSubmit="UpdateCategoryTriCh" FormName="edit" Enhance>
-                <AntiforgeryToken />
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="CategoryTriCh.CategoryTriChid" value="@CategoryTriCh.CategoryTriChid" />
                 <div class="mb-3">
                     <label for="categoryname" class="form-label">CategoryName:</label>
-                    <InputText id="categoryname" @bind-Value="CategoryTriCh.CategoryName" class="form-control" />
+                    <InputText id="categoryname" name="CategoryTriCh.CategoryName" @bind-Value="CategoryTriCh.CategoryName" class="form-control" />
                     <ValidationMessage For="() => CategoryTriCh.CategoryName" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="slug" class="form-label">Slug:</label>
-                    <InputText id="slug" @bind-Value="CategoryTriCh.Slug" class="form-control" />
+                    <InputText id="slug" name="CategoryTriCh.Slug" @bind-Value="CategoryTriCh.Slug" class="form-control" />
                     <ValidationMessage For="() => CategoryTriCh.Slug" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="parentid" class="form-label">ParentId:</label>
-                    <InputNumber id="parentid" @bind-Value="CategoryTriCh.ParentId" class="form-control" />
+                    <InputNumber id="parentid" name="CategoryTriCh.ParentId" @bind-Value="CategoryTriCh.ParentId" class="form-control" />
                     <ValidationMessage For="() => CategoryTriCh.ParentId" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="status" class="form-label">Status:</label>
-                    <InputSelect id="status" @bind-Value="CategoryTriCh.Status" class="form-select">
+                    <InputSelect id="status" name="CategoryTriCh.Status" @bind-Value="CategoryTriCh.Status" class="form-select">
                         <option value="1">Active (True)</option>
                         <option value="0">Inactive (False)</option>
                     </InputSelect>

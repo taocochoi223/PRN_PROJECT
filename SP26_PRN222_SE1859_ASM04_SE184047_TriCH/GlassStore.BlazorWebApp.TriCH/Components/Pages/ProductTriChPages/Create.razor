@@ -1,9 +1,12 @@
 @page "/producttriches/create"
+@attribute [Authorize(Roles = "1")]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.IProductTriCHService _productService
 @inject NavigationManager NavigationManager
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _cateService;
+@inject AuthenticationStateProvider AuthStateProvider
 <PageTitle>Create</PageTitle>
 
 <h1>Create</h1>
@@ -12,93 +15,92 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="ProductTriCh" OnValidSubmit="AddProductTriCh" FormName="create" Enhance>
-            <AntiforgeryToken />
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="productname" class="form-label">ProductName:</label> 
-                <InputText id="productname" @bind-Value="ProductTriCh.ProductName" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.ProductName" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="sku" class="form-label">Sku:</label> 
-                <InputText id="sku" @bind-Value="ProductTriCh.Sku" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Sku" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="categorytrichid" class="form-label">CategoryTriChid:</label> 
-                <InputNumber id="categorytrichid" @bind-Value="ProductTriCh.CategoryTriChid" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.CategoryTriChid" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="brand" class="form-label">Brand:</label> 
-                <InputText id="brand" @bind-Value="ProductTriCh.Brand" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Brand" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="price" class="form-label">Price:</label> 
-                <InputNumber id="price" @bind-Value="ProductTriCh.Price" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Price" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="description" class="form-label">Description:</label> 
-                <InputText id="description" @bind-Value="ProductTriCh.Description" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Description" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="frametype" class="form-label">FrameType:</label> 
-                <InputSelect id="frametype" @bind-Value="ProductTriCh.FrameType" class="form-control">
-                    <option value="">-- Select Frame Type --</option>
-                    <option value="Full Rim">Full Rim (Nguyên khung)</option>
-                    <option value="Half Rim">Half Rim (Nửa khung)</option>
-                    <option value="Rimless">Rimless (Không khung)</option>
-                    <option value="Browline">Browline</option>
-                    <option value="Aviator">Aviator</option>
-                    <option value="Wayfarer">Wayfarer</option>
-                    <option value="Round">Round (Tròn)</option>
-                    <option value="Square">Square (Vuông)</option>
-                </InputSelect>
-                <ValidationMessage For="() => ProductTriCh.FrameType" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="material" class="form-label">Material:</label> 
-                <InputText id="material" @bind-Value="ProductTriCh.Material" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Material" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dimensions" class="form-label">Dimensions:</label> 
-                <InputText id="dimensions" @bind-Value="ProductTriCh.Dimensions" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.Dimensions" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="stockquantity" class="form-label">StockQuantity:</label> 
-                <InputNumber id="stockquantity" @bind-Value="ProductTriCh.StockQuantity" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.StockQuantity" class="text-danger" /> 
-            </div>
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                <InputSelect id="status" @bind-Value="ProductTriCh.Status" class="form-select">
-                    <option value="1">Active (True)</option>
-                    <option value="0">Inactive (False)</option>
-                </InputSelect>
-                <ValidationMessage For="() => ProductTriCh.Status" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="createdat" class="form-label">CreatedAt:</label> 
-                <InputDate id="createdat" @bind-Value="ProductTriCh.CreatedAt" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.CreatedAt" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedat" class="form-label">UpdatedAt:</label> 
-                <InputDate id="updatedat" @bind-Value="ProductTriCh.UpdatedAt" class="form-control" /> 
-                <ValidationMessage For="() => ProductTriCh.UpdatedAt" class="text-danger" /> 
-            </div>        
-            <div class="mt-4 d-flex gap-1">
-                <button type="submit" class="btn btn-primary">Create</button>
-                <a href="/producttriches" class="btn btn-secondary">Back to List</a>
-            </div>
-        </EditForm>
+                <EditForm method="post" Model="ProductTriCh" OnValidSubmit="AddProductTriCh" FormName="create">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" role="alert"/>
+                    <div class="mb-3">
+                        <label for="productname" class="form-label">ProductName:</label> 
+                        <InputText id="productname" name="ProductTriCh.ProductName" @bind-Value="ProductTriCh.ProductName" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.ProductName" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="sku" class="form-label">Sku:</label> 
+                        <InputText id="sku" name="ProductTriCh.Sku" @bind-Value="ProductTriCh.Sku" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Sku" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="categorytrichid" class="form-label">CategoryTriChid:</label> 
+                        <InputNumber id="categorytrichid" name="ProductTriCh.CategoryTriChid" @bind-Value="ProductTriCh.CategoryTriChid" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.CategoryTriChid" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="brand" class="form-label">Brand:</label> 
+                        <InputText id="brand" name="ProductTriCh.Brand" @bind-Value="ProductTriCh.Brand" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Brand" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price:</label> 
+                        <InputNumber id="price" name="ProductTriCh.Price" @bind-Value="ProductTriCh.Price" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Price" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description:</label> 
+                        <InputText id="description" name="ProductTriCh.Description" @bind-Value="ProductTriCh.Description" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Description" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="frametype" class="form-label">FrameType:</label> 
+                        <InputSelect id="frametype" name="ProductTriCh.FrameType" @bind-Value="ProductTriCh.FrameType" class="form-control">
+                            <option value="">-- Select Frame Type --</option>
+                            <option value="Full Rim">Full Rim (Nguyên khung)</option>
+                            <option value="Half Rim">Half Rim (Nửa khung)</option>
+                            <option value="Rimless">Rimless (Không khung)</option>
+                            <option value="Browline">Browline</option>
+                            <option value="Aviator">Aviator</option>
+                            <option value="Wayfarer">Wayfarer</option>
+                            <option value="Round">Round (Tròn)</option>
+                            <option value="Square">Square (Vuông)</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => ProductTriCh.FrameType" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="material" class="form-label">Material:</label> 
+                        <InputText id="material" name="ProductTriCh.Material" @bind-Value="ProductTriCh.Material" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Material" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="dimensions" class="form-label">Dimensions:</label> 
+                        <InputText id="dimensions" name="ProductTriCh.Dimensions" @bind-Value="ProductTriCh.Dimensions" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.Dimensions" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="stockquantity" class="form-label">StockQuantity:</label> 
+                        <InputNumber id="stockquantity" name="ProductTriCh.StockQuantity" @bind-Value="ProductTriCh.StockQuantity" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.StockQuantity" class="text-danger" /> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status:</label>
+                        <InputSelect id="status" name="ProductTriCh.Status" @bind-Value="ProductTriCh.Status" class="form-select">
+                            <option value="1">Active (True)</option>
+                            <option value="0">Inactive (False)</option>
+                        </InputSelect>
+                        <ValidationMessage For="() => ProductTriCh.Status" class="text-danger" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="createdat" class="form-label">CreatedAt:</label> 
+                        <InputDate id="createdat" name="ProductTriCh.CreatedAt" @bind-Value="ProductTriCh.CreatedAt" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.CreatedAt" class="text-danger" /> 
+                    </div>        
+                    <div class="mb-3">
+                        <label for="updatedat" class="form-label">UpdatedAt:</label> 
+                        <InputDate id="updatedat" name="ProductTriCh.UpdatedAt" @bind-Value="ProductTriCh.UpdatedAt" class="form-control" /> 
+                        <ValidationMessage For="() => ProductTriCh.UpdatedAt" class="text-danger" /> 
+                    </div>        
+                    <div class="mt-4 d-flex gap-1">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                        <a href="/producttriches" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </EditForm>
     </div>
 </div>
 
@@ -112,6 +114,14 @@
 
     private async Task AddProductTriCh()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value != "1")
+        {
+            NavigationManager.NavigateTo("/Account/Forbidden");
+            return;
+        }
+
         if (byte.TryParse(StatusString, out var status))
         {
             ProductTriCh.Status = status;

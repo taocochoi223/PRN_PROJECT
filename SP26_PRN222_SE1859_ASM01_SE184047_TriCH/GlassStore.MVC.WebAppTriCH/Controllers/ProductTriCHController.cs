@@ -25,6 +25,12 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return roleId == "1";
         }
 
+        private bool IsManager()
+        {
+            var roleId = User.FindFirst(ClaimTypes.Role)?.Value;
+            return roleId == "2";
+        }
+
         public async Task<IActionResult> Index(string search, int? categoryId, int page = 1)
         {
             int pageSize = 8; 
@@ -59,10 +65,10 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             return View(products);
         }
 
-        [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Manage(string search, int page = 1)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            // Cả Admin (1) và Manager (2) đều được xem danh sách management
+            if (!IsAdmin() && !IsManager()) return RedirectToAction("Index", "Home");
 
             int pageSize = 5; 
             int pageIndex = page - 1;
@@ -89,7 +95,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Create()
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
             await LoadCategoriesToViewBag();
             return View();
         }
@@ -99,7 +105,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Create(ProductTriCh product)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
 
             if (ModelState.IsValid)
             {
@@ -121,7 +127,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
 
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null) return NotFound();
@@ -135,7 +141,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Edit(int id, ProductTriCh product)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
             if (id != product.ProductTriChid) return NotFound();
 
             if (ModelState.IsValid)
@@ -150,7 +156,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
             var product = await _productService.GetProductByIdAsync(id);
             if (product == null) return NotFound();
             return View(product);
@@ -161,7 +167,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [TypeFilter(typeof(Filters.AuthenticationFilter))]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!IsAdmin()) return RedirectToAction("Index", "Home");
+            if (!IsAdmin()) return RedirectToAction(nameof(Manage));
             await _productService.DeleteProductAsync(id);
             return RedirectToAction(nameof(Manage));
         }

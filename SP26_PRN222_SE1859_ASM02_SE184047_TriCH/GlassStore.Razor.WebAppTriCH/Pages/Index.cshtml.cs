@@ -12,9 +12,9 @@ namespace GlassStore.Razor.WebAppTriCH.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public RedirectToPageResult OnGet()
         {
-
+            return RedirectToPage("/Account/Login");   
         }
     }
 }

@@ -34,12 +34,10 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.ProductTriCh
         public string? SearchToken { get; set; }
 
         public int TotalPages { get; set; }
-        public int PageSize { get; set; } = 6;
+        public int PageSize { get; set; } = 5;
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // Mọi người đã qua AuthenticationFilter đều có thể xem list
-            // Chỉ cấm ở các trang can thiệp dữ liệu (Create, Edit, Delete)
 
             var result = await _productService.GetAllProductPagedAsync(PageIndex - 1, PageSize, SearchToken);
             ProductTriCh = result.Items;

@@ -82,7 +82,7 @@ namespace GlassStore.Razor.WebAppTriCH.Pages.Account
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                if (user.RoleId == 1) 
+                if (user.RoleId == 1 || user.RoleId == 2) 
                 {
                     return RedirectToPage("/ProductTriCh/Manage");
                 }

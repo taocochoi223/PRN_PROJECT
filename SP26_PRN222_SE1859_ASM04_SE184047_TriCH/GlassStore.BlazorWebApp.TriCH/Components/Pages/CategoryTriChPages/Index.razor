@@ -1,5 +1,6 @@
 @page "/categorytriches"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "1,2")]
+@using Microsoft.AspNetCore.Authorization
 @rendermode @(new InteractiveServerRenderMode(prerender: true))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -11,7 +12,9 @@
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Category Management</h1>
-    <a href="categorytriches/create" class="btn btn-success">Create New</a>
+    <AuthorizeView Roles="1">
+        <a href="categorytriches/create" class="btn btn-success">Create New</a>
+    </AuthorizeView>
 </div>
 
 <div class="mb-3 d-flex gap-2">
@@ -41,15 +44,19 @@
 
     <TemplateColumn Title="Actions" Context="c">
         <div class="d-flex gap-1">
-            <a class="btn btn-sm btn-primary" href="@($"categorytriches/edit?categorytrichid={c.CategoryTriChid}")">
-                Edit
-            </a>
+            <AuthorizeView Roles="1">
+                <a class="btn btn-sm btn-primary" href="@($"categorytriches/edit?categorytrichid={c.CategoryTriChid}")">
+                    Edit
+                </a>
+            </AuthorizeView>
             <a class="btn btn-sm btn-info text-white" href="@($"categorytriches/details?categorytrichid={c.CategoryTriChid}")">
                 Details
             </a>
-            <a class="btn btn-sm btn-danger" href="@($"categorytriches/delete?categorytrichid={c.CategoryTriChid}")">
-                Delete
-            </a>
+            <AuthorizeView Roles="1">
+                <a class="btn btn-sm btn-danger" href="@($"categorytriches/delete?categorytrichid={c.CategoryTriChid}")">
+                    Delete
+                </a>
+            </AuthorizeView>
         </div>
     </TemplateColumn>
 </QuickGrid>

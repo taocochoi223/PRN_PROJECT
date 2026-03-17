@@ -17,6 +17,9 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
             _service = service;
         }
 
+        private bool IsAdmin() => User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "1";
+        private bool IsManager() => User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "2";
+
         public async Task<IActionResult> Index(string? search, int page = 1)
         {
             int pageSize = 5;
@@ -42,6 +45,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
         public async Task<IActionResult> Create()
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             await LoadParentsToViewBag();
             return View();
         }
@@ -50,6 +54,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryTriCh category)
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             if (ModelState.IsValid)
             {
                 await _service.AddCategoryAsync(category);
@@ -61,6 +66,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             var category = await _service.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
 
@@ -72,6 +78,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryTriCh category)
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             if (id != category.CategoryTriChid) return NotFound();
 
             if (ModelState.IsValid)
@@ -85,6 +92,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             var category = await _service.GetCategoryByIdAsync(id);
             if (category == null) return NotFound();
 
@@ -95,6 +103,7 @@ namespace GlassStore.MVC.WebAppTriCH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsAdmin()) return RedirectToAction("Index");
             await _service.DeleteCategoryAsync(id);
             return RedirectToAction(nameof(Index));
         }

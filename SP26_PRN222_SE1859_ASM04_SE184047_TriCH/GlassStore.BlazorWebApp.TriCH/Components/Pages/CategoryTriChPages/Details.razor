@@ -1,4 +1,6 @@
-﻿@page "/categorytriches/details"
+@page "/categorytriches/details"
+@attribute [Authorize(Roles = "1,2")]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.ICategoryTriCHService _service
@@ -27,7 +29,9 @@
             <dd class="col-sm-10">@categorytrich.Status</dd>
         </dl>
         <div>
-            <a href="@($"/categorytriches/edit?categorytrichid={categorytrich.CategoryTriChid}")">Edit</a> |
+            <AuthorizeView Roles="1">
+                <a href="@($"/categorytriches/edit?categorytrichid={categorytrich.CategoryTriChid}")">Edit</a> |
+            </AuthorizeView>
             <a href="@($"/categorytriches")">Back to List</a>
         </div>
     }

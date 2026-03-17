@@ -1,5 +1,6 @@
 @page "/producttriches"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "1,2")]
+@using Microsoft.AspNetCore.Authorization
 @rendermode @(new InteractiveServerRenderMode(prerender: true))
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -10,7 +11,9 @@
 <PageTitle>Product Management</PageTitle>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1>Product Management</h1>
-    <a href="producttriches/create" class="btn btn-success">Create New</a>
+    <AuthorizeView Roles="1">
+        <a href="producttriches/create" class="btn btn-success">Create New</a>
+    </AuthorizeView>
 </div>
 
 <div class="mb-3 d-flex gap-2">
@@ -42,9 +45,13 @@
     
     <TemplateColumn Context="producttrich" Title="Actions">
         <div class="d-flex gap-1">
-            <a class="btn btn-sm btn-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a>
+            <AuthorizeView Roles="1">
+                <a class="btn btn-sm btn-primary" href="@($"producttriches/edit?producttrichid={producttrich.ProductTriChid}")">Edit</a>
+            </AuthorizeView>
             <a class="btn btn-sm btn-info text-white" href="@($"producttriches/details?producttrichid={producttrich.ProductTriChid}")">Details</a>
-            <a class="btn btn-sm btn-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
+            <AuthorizeView Roles="1">
+                <a class="btn btn-sm btn-danger" href="@($"producttriches/delete?producttrichid={producttrich.ProductTriChid}")">Delete</a>
+            </AuthorizeView>
         </div>
     </TemplateColumn>
 </QuickGrid>
@@ -52,7 +59,7 @@
 <Paginator State="@pagination" />
 @code {
     QuickGrid<ProductTriCh> myGrid = default!;
-    PaginationState pagination = new() { ItemsPerPage = 10 };
+    PaginationState pagination = new() { ItemsPerPage = 5 };
     GridItemsProvider<ProductTriCh> productProvider = default!;
     bool isLoading;
     string searchTerm = "";

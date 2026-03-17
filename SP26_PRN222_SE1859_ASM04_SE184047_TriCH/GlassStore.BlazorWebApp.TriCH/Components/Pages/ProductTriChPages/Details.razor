@@ -1,4 +1,6 @@
 @page "/producttriches/details"
+@attribute [Authorize(Roles = "1,2")]
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @using GlassStore.Entities.TriCH.Models
 @inject GlassStore.Services.TriCH.IProductTriCHService _productService;
@@ -43,7 +45,9 @@
             <dd class="col-sm-10">@producttrich.UpdatedAt</dd>
         </dl>
         <div class="mt-4 d-flex gap-1">
-            <a href="@($"/producttriches/edit?producttrichid={producttrich.ProductTriChid}")" class="btn btn-primary">Edit</a>
+            <AuthorizeView Roles="1">
+                <a href="@($"/producttriches/edit?producttrichid={producttrich.ProductTriChid}")" class="btn btn-primary">Edit</a>
+            </AuthorizeView>
             <a href="@($"/producttriches")" class="btn btn-secondary">Back to List</a>
         </div>
     }
