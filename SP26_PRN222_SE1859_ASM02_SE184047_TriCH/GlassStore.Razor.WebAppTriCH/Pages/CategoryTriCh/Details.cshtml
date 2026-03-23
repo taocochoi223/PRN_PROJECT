@@ -7,37 +7,84 @@
 
 <h1>Details</h1>
 
-<div>
+<div id="deleted-message" class="alert alert-danger" style="display:none;">
+    Danh mục này vừa bị xóa bởi một quản trị viên khác. Vui lòng quay lại danh sách.
+</div>
+
+<div id="details-content">
     <h4>CategoryTriCh</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryTriCh.CategoryName)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-categoryName">
             @Html.DisplayFor(model => model.CategoryTriCh.CategoryName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryTriCh.Slug)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-slug">
             @Html.DisplayFor(model => model.CategoryTriCh.Slug)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryTriCh.Status)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-status">
             @(Model.CategoryTriCh.Status == 1 ? "Active" : "InActive")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryTriCh.Parent)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-parentName">
             @Html.DisplayFor(model => model.CategoryTriCh.Parent.CategoryName)
         </dd>
     </dl>
 </div>
-<div>
+<div id="details-actions">
     <a asp-page="./Edit" asp-route-id="@Model.CategoryTriCh.CategoryTriChid" class="btn btn-primary">Edit</a>
     <a asp-page="./Manage" class="btn btn-secondary">Back to List</a>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/EyewareHub").build();
+
+        connection.on("ReceiveHubDelete_categoryTriCh", function (id) {
+            var currentId = parseInt("@Model.CategoryTriCh.CategoryTriChid");
+            if (id == currentId) {
+                alert("Danh mục này đã bị xoá bởi người khác");
+                document.getElementById("details-content").style.display = "none";
+                document.getElementById("details-actions").style.display = "none";
+                document.getElementById("deleted-message").style.display = "block";
+                setTimeout(function() {
+                    window.location.href = "./Manage";
+                }, 3000);
+            }
+        });
+
+        connection.on("ReceiveHubUpdate_categoryTriCh", function (data) {
+            var currentId = parseInt("@Model.CategoryTriCh.CategoryTriChid");
+            if (data.categoryTriChid == currentId) {
+                document.getElementById("display-categoryName").innerText = data.categoryName;
+                document.getElementById("display-slug").innerText = data.slug;
+                document.getElementById("display-status").innerText = data.status == 1 ? "Active" : "InActive";
+                document.getElementById("display-parentName").innerText = data.parentName;
+                
+                // Optional: Flash the updated fields
+                var detailsContainer = document.getElementById("details-content");
+                detailsContainer.style.backgroundColor = "#e8f4fd";
+                setTimeout(function() {
+                    detailsContainer.style.backgroundColor = "transparent";
+                }, 1000);
+            }
+        });
+
+        connection.start().then(function () {
+            console.log("Connected to the SignalR Hub")
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
+    </script>
+}

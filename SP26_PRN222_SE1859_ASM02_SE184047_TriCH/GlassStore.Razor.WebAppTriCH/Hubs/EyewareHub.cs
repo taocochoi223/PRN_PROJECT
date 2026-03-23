@@ -60,7 +60,28 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
         public async Task HubUpdate_productTriCh(ProductTriCh item)
         {
             await _productService.UpdateProductAsync(item);
-            await Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", item.ProductTriChid);
+            var newItem = await _productService.GetProductByIdAsync(item.ProductTriChid);
+            if (newItem != null)
+            {
+                var broadcastData = new
+                {
+                    productTriChid = newItem.ProductTriChid,
+                    productName = newItem.ProductName,
+                    sku = newItem.Sku,
+                    brand = newItem.Brand,
+                    price = newItem.Price,
+                    description = newItem.Description,
+                    frameType = newItem.FrameType,
+                    material = newItem.Material,
+                    dimensions = newItem.Dimensions,
+                    stockQuantity = newItem.StockQuantity,
+                    status = newItem.Status,
+                    createdAt = newItem.CreatedAt,
+                    updatedAt = newItem.UpdatedAt,
+                    categoryName = newItem.CategoryTriCh != null ? newItem.CategoryTriCh.CategoryName : null
+                };
+                await Clients.All.SendAsync("ReceiveHubUpdate_productTriCh", broadcastData);
+            }
         }
         #endregion
 
@@ -92,7 +113,20 @@ namespace GlassStore.Razor.WebAppTriCH.Hubs
         public async Task HubUpdate_categoryTriCh(CategoryTriCh item)
         {
             await _categoryService.UpdateCategoryAsync(item);
-            await Clients.All.SendAsync("ReceiveHubUpdate_categoryTriCh", item.CategoryTriChid);
+            var newItem = await _categoryService.GetCategoryByIdAsync(item.CategoryTriChid);
+            if (newItem != null)
+            {
+                var broadcastData = new
+                {
+                    categoryTriChid = newItem.CategoryTriChid,
+                    categoryName = newItem.CategoryName,
+                    slug = newItem.Slug,
+                    parentId = newItem.ParentId,
+                    status = newItem.Status,
+                    parentName = newItem.Parent != null ? newItem.Parent.CategoryName : ""
+                };
+                await Clients.All.SendAsync("ReceiveHubUpdate_categoryTriCh", broadcastData);
+            }
         }
         #endregion
 

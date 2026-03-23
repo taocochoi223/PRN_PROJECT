@@ -18,6 +18,15 @@ namespace GlassStore.Repositories.TriCH
             _context = context;
         }
 
+        public async Task<List<ProductTriCh>> GetAllProductAsync()
+        {
+            var products = _context.ProductTriChes
+                .Include(p => p.CategoryTriCh)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToListAsync();
+            return await products;
+        }
+
         public async Task<(List<ProductTriCh> Items, int TotalCount)> GetAllProductAsync(int pageIndex, int pageSize, string search = null)
         {
             var query = _context.ProductTriChes

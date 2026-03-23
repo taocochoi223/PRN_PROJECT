@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace GlassStore.Entities.TriCH.Models;
 
@@ -9,12 +10,14 @@ public partial class ProductTriCh
 {
     public int ProductTriChid { get; set; }
 
+    [Required(ErrorMessage ="Product name is required")]
     public string ProductName { get; set; }
 
     public string Sku { get; set; }
 
     public int? CategoryTriChid { get; set; }
 
+    [Required(ErrorMessage = "Brand is required")]
     public string Brand { get; set; }
 
     public decimal Price { get; set; }
@@ -26,7 +29,6 @@ public partial class ProductTriCh
     public string Material { get; set; }
 
     public string Dimensions { get; set; }
-
     public int? StockQuantity { get; set; }
 
     public byte? Status { get; set; }

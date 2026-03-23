@@ -29,8 +29,14 @@
                         <ValidationMessage For="() => ProductTriCh.Sku" class="text-danger" /> 
                     </div>        
                     <div class="mb-3">
-                        <label for="categorytrichid" class="form-label">CategoryTriChid:</label> 
-                        <InputNumber id="categorytrichid" name="ProductTriCh.CategoryTriChid" @bind-Value="ProductTriCh.CategoryTriChid" class="form-control" /> 
+                        <label for="categorytrichid" class="form-label">Category:</label> 
+                        <InputSelect id="categorytrichid" name="ProductTriCh.CategoryTriChid" @bind-Value="ProductTriCh.CategoryTriChid" class="form-control">
+                            <option value="">-- Select Category --</option>
+                            @foreach (var category in categories)
+                            {
+                                <option value="@category.CategoryTriChid">@category.CategoryName</option>
+                            }
+                        </InputSelect>
                         <ValidationMessage For="() => ProductTriCh.CategoryTriChid" class="text-danger" /> 
                     </div>        
                     <div class="mb-3">
@@ -107,8 +113,13 @@
 @code {
     [SupplyParameterFromForm]
     private ProductTriCh ProductTriCh { get; set; } = new();
-    private List<CategoryTriCh> CategoryTriCh { get; set; } = new();
+    private List<CategoryTriCh> categories { get; set; } = new();
     private string StatusString { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await _cateService.GetAllCategoriesAsync();
+    }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
 

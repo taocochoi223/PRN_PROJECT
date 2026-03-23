@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,11 @@ namespace GlassStore.Services.TriCH
         public ProductTriCHService(ProductTriCHRepository repo)
         {
             _repo = repo;
+        }
+
+        public async Task<List<ProductTriCh>> GetAllProductAsync()
+        {
+            return await _repo.GetAllProductAsync();
         }
 
         public async Task<(List<ProductTriCh> Items, int TotalCount)> GetAllProductPagedAsync(int pageIndex, int pageSize, string? search = null)

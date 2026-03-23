@@ -18,79 +18,79 @@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.ProductName)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-productName">
             @Html.DisplayFor(model => model.ProductTriCh.ProductName)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Sku)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-sku">
             @Html.DisplayFor(model => model.ProductTriCh.Sku)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Brand)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-brand">
             @Html.DisplayFor(model => model.ProductTriCh.Brand)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Price)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-price">
             @Html.DisplayFor(model => model.ProductTriCh.Price)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Description)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-description">
             @Html.DisplayFor(model => model.ProductTriCh.Description)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.FrameType)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-frameType">
             @Html.DisplayFor(model => model.ProductTriCh.FrameType)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Material)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-material">
             @Html.DisplayFor(model => model.ProductTriCh.Material)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Dimensions)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-dimensions">
             @Html.DisplayFor(model => model.ProductTriCh.Dimensions)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.StockQuantity)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-stockQuantity">
             @Html.DisplayFor(model => model.ProductTriCh.StockQuantity)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.Status)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-status">
             @(Model.ProductTriCh.Status == 1 ? "Active" : "InActive")
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.CreatedAt)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-createdAt">
             @Html.DisplayFor(model => model.ProductTriCh.CreatedAt)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.UpdatedAt)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-updatedAt">
             @Html.DisplayFor(model => model.ProductTriCh.UpdatedAt)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ProductTriCh.CategoryTriCh)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-10" id="display-categoryName">
             @Html.DisplayFor(model => model.ProductTriCh.CategoryTriCh.CategoryName)
         </dd>
     </dl>
@@ -112,7 +112,34 @@
                 document.getElementById("details-content").style.display = "none";
                 document.getElementById("details-actions").style.display = "none";
                 document.getElementById("deleted-message").style.display = "block";
-                window.location.href = "./Manage";
+                setTimeout(function() {
+                    window.location.href = "./Manage";
+                }, 3000);
+            }
+        });
+
+        connection.on("ReceiveHubUpdate_productTriCh", function (data) {
+            var currentId = parseInt("@Model.ProductTriCh.ProductTriChid");
+            if (data.productTriChid == currentId) {
+                document.getElementById("display-productName").innerText = data.productName;
+                document.getElementById("display-sku").innerText = data.sku;
+                document.getElementById("display-brand").innerText = data.brand;
+                document.getElementById("display-price").innerText = data.price;
+                document.getElementById("display-description").innerText = data.description;
+                document.getElementById("display-frameType").innerText = data.frameType;
+                document.getElementById("display-material").innerText = data.material;
+                document.getElementById("display-dimensions").innerText = data.dimensions;
+                document.getElementById("display-stockQuantity").innerText = data.stockQuantity;
+                document.getElementById("display-status").innerText = data.status == 1 ? "Active" : "InActive";
+                document.getElementById("display-updatedAt").innerText = data.updatedAt;
+                document.getElementById("display-categoryName").innerText = data.categoryName;
+                
+                // Optional: Flash the updated fields to show user something changed
+                var detailsContainer = document.getElementById("details-content");
+                detailsContainer.style.backgroundColor = "#e8f4fd";
+                setTimeout(function() {
+                    detailsContainer.style.backgroundColor = "transparent";
+                }, 1000);
             }
         });
 
