@@ -3,7 +3,7 @@
     ViewData["Title"] = "Book Details";
 }
 
-<h1>Book Details</h1>
+<h2>Book Details</h2>
 
 <div>
     BookId: <span id="span_bookId">@Model.BookId</span> <br />
@@ -12,12 +12,12 @@
 </div>
 
 <h3>Authors List</h3>
-<table border="1">
+<table class="table">
     <thead>
         <tr>
             <th>AuthorId</th>
             <th>Name</th>
-            <th>BirthYear</th>
+            <th>Birth Year</th>
         </tr>
     </thead>
     <tbody>
@@ -32,4 +32,4 @@
     </tbody>
 </table>
 
-<a asp-action="Index">Back to list</a>
+<a href="/Book">Back to list</a>

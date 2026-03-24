@@ -12,7 +12,6 @@ namespace Q2_BookManagement.Controllers
             _bookService = bookService;
         }
 
-        // Trong BooksController.cs
         public async Task<IActionResult> Index(int? authorId, int page = 1)
         {
             int pageSize = 5;
