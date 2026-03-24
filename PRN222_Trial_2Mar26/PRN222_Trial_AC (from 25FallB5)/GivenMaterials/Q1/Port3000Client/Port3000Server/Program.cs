@@ -1,4 +1,4 @@
-﻿using System.Net.Sockets;
+using System.Net.Sockets;
 using System.Net;
 using System.Text.Json;
 using System.Text;
@@ -13,6 +13,12 @@ namespace Server3000
         public DateTime BorrowDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public string Status { get; set; } = "";
+    }
+
+    public class ServerResponse
+    {
+        public bool ReaderFound { get; set; }
+        public List<BorrowRecord> Books { get; set; } = new();
     }
 
     public class Reader
@@ -79,18 +85,19 @@ namespace Server3000
 
                 if (int.TryParse(readerIdStr, out int readerId))
                 {
-                    var borrowHistory = GetBorrowHistory(readerId);
-                    string jsonResponse = JsonSerializer.Serialize(borrowHistory);
+                    var serverResponse = GetBorrowHistory(readerId);
+                    string jsonResponse = JsonSerializer.Serialize(serverResponse);
 
                     byte[] response = Encoding.UTF8.GetBytes(jsonResponse);
                     await stream.WriteAsync(response, 0, response.Length);
 
-                    Console.WriteLine($"Sent {borrowHistory.Count} records for Reader ID: {readerId}");
+                    Console.WriteLine($"Sent {serverResponse.Books.Count} records for Reader ID: {readerId} (ReaderFound={serverResponse.ReaderFound})");
                 }
                 else
                 {
-                    // Send empty list for invalid Reader ID
-                    string emptyResponse = JsonSerializer.Serialize(new List<BorrowRecord>());
+                    // Send reader-not-found response for unparseable input
+                    var notFound = new ServerResponse { ReaderFound = false };
+                    string emptyResponse = JsonSerializer.Serialize(notFound);
                     byte[] response = Encoding.UTF8.GetBytes(emptyResponse);
                     await stream.WriteAsync(response, 0, response.Length);
                 }
@@ -105,17 +112,16 @@ namespace Server3000
             }
         }
 
-        private static List<BorrowRecord> GetBorrowHistory(int readerId)
+        private static ServerResponse GetBorrowHistory(int readerId)
         {
-            var result = new List<BorrowRecord>();
-
             // Check if reader exists
             bool readerExists = readers.Any(r => r.ReaderID == readerId);
             if (!readerExists)
             {
-                return result; // Return empty list if reader doesn't exist
+                return new ServerResponse { ReaderFound = false };
             }
 
+            var result = new List<BorrowRecord>();
             foreach (var record in borrowRecords.Where(r => r.ReaderID == readerId))
             {
                 var book = books.FirstOrDefault(b => b.BookID == record.BookID);
@@ -133,7 +139,7 @@ namespace Server3000
                 }
             }
 
-            return result;
+            return new ServerResponse { ReaderFound = true, Books = result };
         }
 
         private static void InitializeSampleData()
